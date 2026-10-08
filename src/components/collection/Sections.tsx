@@ -141,7 +141,7 @@ function CatchVideo({ src, poster, index, active, onActivate }: { src: string; p
   };
 
   return (
-    <div ref={wrap} className="relative h-full w-full overflow-hidden rounded-lg bg-frame">
+    <div ref={wrap} className="relative h-full w-full overflow-hidden bg-frame">
       {!near && <SafeImg src={poster} alt="Customer catch on a Masters stickbait" loading="lazy" className="h-full w-full object-cover" />}
       {near && (
         <video
@@ -156,9 +156,10 @@ function CatchVideo({ src, poster, index, active, onActivate }: { src: string; p
           className="h-full w-full object-cover"
         />
       )}
-      <Button variant="ghost" type="button" onClick={toggle} aria-label={active ? `${playing ? "Pause" : "Play"} customer catch video ${index}` : `Focus customer catch video ${index}`} className="absolute inset-0 h-full w-full rounded-none p-0 hover:bg-transparent">
+      <div className="catch-overlay" />
+      <Button variant="ghost" type="button" onClick={toggle} aria-label={active ? `${playing ? "Pause" : "Play"} customer catch video ${index}` : `Focus customer catch video ${index}`} className="absolute inset-0 h-full w-full rounded-none p-0 text-media-foreground hover:bg-transparent hover:text-media-foreground">
         {!playing && (
-          <span className={`flex h-14 w-14 items-center justify-center rounded-full border border-foreground/25 bg-background/70 backdrop-blur transition-opacity ${active ? "opacity-100" : "opacity-70"}`}>
+          <span className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-media-foreground bg-gallery-ink/20">
             <Play className="h-5 w-5" fill="currentColor" />
           </span>
         )}
@@ -171,9 +172,10 @@ function CatchPhoto({ src, caption }: { src: string; caption?: string | undefine
   const [hidden, setHidden] = useState(false);
   if (hidden) return null;
   return (
-    <figure className="relative h-full w-full overflow-hidden rounded-lg bg-frame">
+    <figure className="relative h-full w-full overflow-hidden bg-frame">
       <SafeImg src={src} alt={caption ?? "Customer catch on a Masters stickbait"} loading="lazy" onHide={() => setHidden(true)} className="h-full w-full object-cover" />
-      {caption && <figcaption className="absolute inset-x-0 bottom-0 bg-background/70 px-3 py-2 text-[13px] font-medium backdrop-blur">{caption}</figcaption>}
+      <div className="catch-overlay" />
+      {caption && <figcaption className="catch-caption">{caption}</figcaption>}
     </figure>
   );
 }
@@ -195,15 +197,15 @@ export function Catches({ items }: { items: CatchItem[] }) {
   }, [api]);
 
   return (
-    <div className="mt-8" role="region" aria-roledescription="carousel" aria-label="Customer catches">
-      <div ref={carouselRef} className="-mx-4 overflow-hidden md:mx-0" onKeyDown={(event) => {
+    <div className="catch-carousel" role="region" aria-roledescription="carousel" aria-label="Customer catches">
+      <div ref={carouselRef} className="catch-viewport" onKeyDown={(event) => {
         if (event.key === "ArrowLeft") { event.preventDefault(); api?.scrollPrev(); }
         if (event.key === "ArrowRight") { event.preventDefault(); api?.scrollNext(); }
       }}>
-        <div className="flex touch-pan-y">
+        <div className="catch-track">
           {items.map((it, i) => (
-            <div key={it.src} role="group" aria-roledescription="slide" aria-label={`${i + 1} of ${items.length}`} aria-current={selected === i ? "true" : undefined} className="min-w-0 flex-[0_0_72%] px-2 md:flex-[0_0_32%] md:px-3 lg:flex-[0_0_25%]">
-              <div className={`relative h-[420px] rounded-lg transition-opacity duration-300 md:h-[480px] ${selected === i ? "opacity-100 ring-1 ring-primary ring-offset-4 ring-offset-background" : "opacity-45 hover:opacity-75"}`}>
+            <div key={it.src} role="group" aria-roledescription="slide" aria-label={`${i + 1} of ${items.length}`} aria-current={selected === i ? "true" : undefined} data-distance={Math.min(Math.abs(i - selected), items.length - Math.abs(i - selected))} className="catch-slide">
+              <div className="catch-media">
                 {it.kind === "video" ? <CatchVideo src={it.src} poster={it.poster} index={i + 1} active={selected === i} onActivate={() => api?.scrollTo(i)} /> : (
                   <>
                     <CatchPhoto src={it.src} caption={it.caption} />
@@ -215,11 +217,9 @@ export function Catches({ items }: { items: CatchItem[] }) {
           ))}
         </div>
       </div>
-      <div className="mt-6 flex items-center justify-center gap-5">
-        <Button type="button" variant="outline" size="icon" className="h-11 w-11 rounded-full" aria-label="Previous catch" title="Previous catch" onClick={() => api?.scrollPrev()}><ArrowLeft /></Button>
-        <p className="min-w-16 text-center text-sm tabular-nums text-muted-foreground" aria-live="polite"><span className="font-medium text-foreground">{String(selected + 1).padStart(2, "0")}</span> / {String(items.length).padStart(2, "0")}</p>
-        <Button type="button" variant="outline" size="icon" className="h-11 w-11 rounded-full" aria-label="Next catch" title="Next catch" onClick={() => api?.scrollNext()}><ArrowRight /></Button>
-      </div>
+      <Button type="button" variant="ghost" size="icon" className="catch-arrow catch-arrow-prev" aria-label="Previous catch" title="Previous catch" onClick={() => api?.scrollPrev()}><ArrowLeft /></Button>
+      <span className="sr-only" aria-live="polite">Catch {selected + 1} of {items.length}</span>
+      <Button type="button" variant="ghost" size="icon" className="catch-arrow catch-arrow-next" aria-label="Next catch" title="Next catch" onClick={() => api?.scrollNext()}><ArrowRight /></Button>
     </div>
   );
 }
