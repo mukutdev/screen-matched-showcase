@@ -197,7 +197,7 @@ export function StickyBar({ s, set, resultCount, visible }: { s: FilterState; se
   const [open, setOpen] = useState(false);
   return (
     <div
-      className={`fixed inset-x-0 top-0 z-40 flex h-12 items-center justify-between gap-2 border-b border-border bg-background px-4 transition-transform duration-200 md:hidden ${
+      className={`fixed inset-x-0 top-0 z-40 flex h-12 items-center justify-between gap-2 border-b border-border bg-background/80 backdrop-blur-md px-4 transition-transform duration-200 md:hidden ${
         visible ? "translate-y-0" : "-translate-y-full"
       }`}
       aria-hidden={!visible}
