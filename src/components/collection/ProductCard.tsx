@@ -7,11 +7,11 @@ import { LureImage, Swatch } from "./LureImage";
 
 export function priceLabel(p: Product) {
   const ps = p.variants.map((v) => v.price);
-  return ps.length > 1 ? `${money(Math.min(...ps))}–${Math.max(...ps).toFixed(2)} · ${ps.length} weights` : money(ps[0]);
+  return ps.length > 1 ? `${money(Math.min(...ps))}–${Math.max(...ps).toFixed(2)} · ${ps.length} weights` : money(ps[0]!);
 }
 
 export function specLine(p: Product) {
-  const w = p.variants.length > 1 ? `${p.variants[0].weight}–${p.variants.at(-1)!.weight}g` : `${p.variants[0].weight}g`;
+  const w = p.variants.length > 1 ? `${p.variants[0]!.weight}–${p.variants.at(-1)!.weight}g` : `${p.variants[0]!.weight}g`;
   return `${p.size}mm · ${w} · ${p.line === "gen2" ? "Topwater" : p.action === "floating" ? "Floating" : "Sinking"}`;
 }
 
@@ -24,7 +24,7 @@ export function ProductCard({
   preferredColour?: ColourId | undefined;
   onQuickAdd: (p: Product, trigger: HTMLElement) => void;
 }) {
-  const initial = preferredColour && p.colours.includes(preferredColour) ? preferredColour : p.colours[0];
+  const initial = preferredColour && p.colours.includes(preferredColour) ? preferredColour : p.colours[0]!;
   const [hoverColour, setHoverColour] = useState<ColourId | null>(null);
   const colour = hoverColour ?? initial;
   const colourName = COLOURS.find((c) => c.id === colour)!.name;
