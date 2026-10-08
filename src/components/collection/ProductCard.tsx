@@ -31,53 +31,56 @@ export function ProductCard({
   const allSold = p.colours.every((c) => p.soldOut.includes(c));
   const badge = allSold ? "Sold out" : p.bestSeller ? "Best seller" : p.badge;
 
+  const open = (e: React.MouseEvent) => {
+    e.preventDefault();
+    toast(`Would open product page: ${p.name} – ${colourName}`);
+  };
+
   return (
     <article className="group relative">
-      <a
-        href="#"
-        onClick={(e) => {
-          e.preventDefault();
-          toast(`Would open product page: ${p.name} – ${colourName}`);
-        }}
-        className="block rounded-lg"
-      >
-        <div className="relative aspect-[4/3] overflow-hidden rounded-lg border border-border">
-          <div className="absolute inset-0">
-            <LureImage colour={colour} size={p.size} />
-          </div>
-          <div className="absolute inset-0 opacity-0 transition-opacity duration-300 md:group-hover:opacity-100">
-            <LureImage colour={colour} size={p.size} water />
-          </div>
-          {badge && (
-            <span
-              className={`absolute left-2 top-2 rounded px-2 py-0.5 text-xs font-semibold ${
-                badge === "Sold out" ? "bg-foreground text-background" : "bg-primary text-primary-foreground"
-              }`}
-            >
-              {badge}
-            </span>
-          )}
+      <div className="relative aspect-[4/3] overflow-hidden rounded-lg border border-border">
+        <div className="absolute inset-0">
+          <LureImage colour={colour} size={p.size} />
         </div>
-        <div className="mt-2 space-y-0.5 pr-1">
-          <h3 className="text-[15px] font-bold leading-tight">{p.name}</h3>
-          <p className="text-sm">{specLine(p)}</p>
-          <p className="text-sm text-muted-foreground">{WATER_LABEL[p.size]}</p>
-          <p className="text-[15px] font-bold">{priceLabel(p)}</p>
+        <div className="absolute inset-0 opacity-0 transition-opacity duration-300 md:group-hover:opacity-100">
+          <LureImage colour={colour} size={p.size} water />
         </div>
-      </a>
-      <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+        {badge && (
+          <span
+            className={`absolute left-2 top-2 rounded px-2 py-0.5 text-xs font-semibold ${
+              badge === "Sold out" ? "bg-foreground text-background" : "bg-primary text-primary-foreground"
+            }`}
+          >
+            {badge}
+          </span>
+        )}
+        <button
+          type="button"
+          aria-label={`Quick add ${p.name}`}
+          disabled={allSold}
+          onClick={(e) => onQuickAdd(p, e.currentTarget)}
+          className="absolute bottom-2 right-2 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-background text-foreground ring-1 ring-border transition-colors hover:bg-primary hover:text-primary-foreground disabled:opacity-40"
+        >
+          <Plus className="h-5 w-5" />
+        </button>
+      </div>
+      <div className="mt-2 space-y-0.5 pr-1">
+        <h3 className="text-[15px] font-bold leading-tight">
+          <a href="#" onClick={open} className="after:absolute after:inset-0 after:rounded-lg focus-visible:outline-none focus-visible:after:outline focus-visible:after:outline-2 focus-visible:after:outline-ring">
+            {p.name}
+          </a>
+        </h3>
+        <p className="text-sm">{specLine(p)}</p>
+        <p className="text-sm text-muted-foreground">{WATER_LABEL[p.size]}</p>
+        <p className="text-[15px] font-bold">{priceLabel(p)}</p>
+      </div>
+      <div className="relative z-10 mt-1.5 flex w-fit flex-wrap items-center gap-1.5">
         <div className="flex gap-1" onMouseLeave={() => setHoverColour(null)}>
           {p.colours.map((c) => {
             const so = p.soldOut.includes(c);
             const name = COLOURS.find((x) => x.id === c)!.name;
             return (
-              <span
-                key={c}
-                role="img"
-                aria-label={`${name}${so ? ", sold out" : ""}`}
-                onMouseEnter={() => setHoverColour(c)}
-                className="cursor-default"
-              >
+              <span key={c} role="img" aria-label={`${name}${so ? ", sold out" : ""}`} onMouseEnter={() => setHoverColour(c)}>
                 <Swatch colour={c} soldOut={so} size={16} />
               </span>
             );
@@ -87,16 +90,6 @@ export function ProductCard({
           {p.colours.length} colour{p.colours.length > 1 ? "s" : ""}
         </span>
       </div>
-      <button
-        type="button"
-        aria-label={`Quick add ${p.name}`}
-        disabled={allSold}
-        onClick={(e) => onQuickAdd(p, e.currentTarget)}
-        className="absolute right-2 top-0 flex h-11 w-11 -translate-y-[calc(100%+0.5rem)] items-center justify-center rounded-full bg-background text-foreground shadow-sm ring-1 ring-border transition-colors hover:bg-primary hover:text-primary-foreground disabled:opacity-40"
-        style={{ top: "var(--img-h)" }}
-      >
-        <Plus className="h-5 w-5" />
-      </button>
     </article>
   );
 }
