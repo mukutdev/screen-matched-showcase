@@ -89,7 +89,7 @@ export function Hero({ onShop, onSize }: { onShop: () => void; onSize: () => voi
   );
 }
 
-function CatchVideo({ src, index, active, onActivate }: { src: string; index: number; active: boolean; onActivate: () => void }) {
+function CatchVideo({ src, poster, index, active, onActivate }: { src: string; poster: string; index: number; active: boolean; onActivate: () => void }) {
   const wrap = useRef<HTMLDivElement>(null);
   const video = useRef<HTMLVideoElement>(null);
   const [near, setNear] = useState(false);
@@ -142,9 +142,11 @@ function CatchVideo({ src, index, active, onActivate }: { src: string; index: nu
 
   return (
     <div ref={wrap} className="relative h-full w-full overflow-hidden rounded-lg bg-frame">
+      {!near && <SafeImg src={poster} alt="Customer catch on a Masters stickbait" loading="lazy" className="h-full w-full object-cover" />}
       {near && (
         <video
           ref={video}
+          poster={poster}
           muted
           loop
           playsInline
@@ -202,7 +204,7 @@ export function Catches({ items }: { items: CatchItem[] }) {
           {items.map((it, i) => (
             <div key={it.src} role="group" aria-roledescription="slide" aria-label={`${i + 1} of ${items.length}`} aria-current={selected === i ? "true" : undefined} className="min-w-0 flex-[0_0_72%] px-2 md:flex-[0_0_32%] md:px-3 lg:flex-[0_0_25%]">
               <div className={`relative h-[420px] rounded-lg transition-opacity duration-300 md:h-[480px] ${selected === i ? "opacity-100 ring-1 ring-primary ring-offset-4 ring-offset-background" : "opacity-45 hover:opacity-75"}`}>
-                {it.kind === "video" ? <CatchVideo src={it.src} index={i + 1} active={selected === i} onActivate={() => api?.scrollTo(i)} /> : (
+                {it.kind === "video" ? <CatchVideo src={it.src} poster={it.poster} index={i + 1} active={selected === i} onActivate={() => api?.scrollTo(i)} /> : (
                   <>
                     <CatchPhoto src={it.src} caption={it.caption} />
                     {selected !== i && <Button type="button" variant="ghost" aria-label={`Focus customer catch photo ${i + 1}`} onClick={() => api?.scrollTo(i)} className="absolute inset-0 h-full w-full hover:bg-transparent" />}
