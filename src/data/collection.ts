@@ -233,22 +233,23 @@ export const RELATED = [
   { name: "Rigging guide", img: STORE + "/cdn/shop/files/rig-stickbait-1-ML6vL0t2_1.jpg?v=1787555839&width=800", href: RIGGING_GUIDE },
 ];
 
-const V = (id: string) => `${STORE}/cdn/shop/videos/c/vp/${id}/${id}.m3u8?v=0`;
+const V = (id: string) => `https://cdn.shopify.com/videos/c/vp/${id}/${id}.m3u8`;
+const catchPoster = (id: string) => `${STORE}/cdn/shop/files/preview_images/${id}.thumbnail.0000000000.jpg?width=700`;
 export const HERO = {
   video: STORE + "/cdn/shop/videos/c/vp/b58a1e70038743c2aca263098138ea65/b58a1e70038743c2aca263098138ea65.HD-1080p-7.2Mbps-93999858.mp4?v=0",
   poster: STORE + "/cdn/shop/files/preview_images/b58a1e70038743c2aca263098138ea65.thumbnail.0000000000_1920x.jpg?v=1789031058",
 };
 
-export type CatchItem = { kind: "video"; src: string } | { kind: "photo"; src: string; caption?: string };
+export type CatchItem = { kind: "video"; src: string; poster: string } | { kind: "photo"; src: string; caption?: string };
 export const CATCHES: CatchItem[] = [
-  { kind: "video", src: V("e157077b6d814686a2813aabae24de24") },
+  { kind: "video", src: V("e157077b6d814686a2813aabae24de24"), poster: catchPoster("e157077b6d814686a2813aabae24de24") },
   { kind: "photo", src: STORE + "/cdn/shop/files/preview_images/77849a9cc6c643dd8cde8aa2473c27d9.thumbnail.0000000000.jpg?v=1771226129&width=1000", caption: "GT on the 150F Masters" },
-  { kind: "video", src: V("ee12b81bf4d642399f4a76b44310ce2d") },
+  { kind: "video", src: V("ee12b81bf4d642399f4a76b44310ce2d"), poster: catchPoster("ee12b81bf4d642399f4a76b44310ce2d") },
   { kind: "photo", src: STORE + "/cdn/shop/files/Screenshot_2025-11-02_221640_45eee645-c982-44e4-a839-d3317d431c31.png?v=1780048370&width=900" },
-  { kind: "video", src: V("183128181efb46efb73802244e171392") },
+  { kind: "video", src: V("183128181efb46efb73802244e171392"), poster: catchPoster("183128181efb46efb73802244e171392") },
   { kind: "photo", src: STORE + "/cdn/shop/files/Screenshot_2026-01-28_195530.png?v=1769590544&width=900" },
-  { kind: "video", src: V("339c3f4138ce4847ace6f3c529d04973") },
+  { kind: "video", src: V("339c3f4138ce4847ace6f3c529d04973"), poster: catchPoster("339c3f4138ce4847ace6f3c529d04973") },
   { kind: "photo", src: STORE + "/cdn/shop/files/Screenshot_2026-01-28_195504.png?v=1771367017&width=900" },
-  { kind: "video", src: V("e4632be962324f178c789d442eb71642") },
+  { kind: "video", src: V("e4632be962324f178c789d442eb71642"), poster: catchPoster("e4632be962324f178c789d442eb71642") },
   { kind: "photo", src: STORE + "/cdn/shop/files/g3_cd3aef85-1b3c-45b3-9006-6cea52043eb2.png?v=1789023936&width=900" },
 ];
