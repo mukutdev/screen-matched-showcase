@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, Pause, Play } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Pause, Play, Star, Volume2, VolumeX } from "lucide-react";
 import useEmblaCarousel from "embla-carousel-react";
 import { Button } from "@/components/ui/button";
-import { HERO, type CatchItem } from "@/data/collection";
+import { HERO, type CatchVideo as CatchVideoItem } from "@/data/collection";
 import { SafeImg } from "./Media";
 
 const reducedMotion = () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -89,14 +89,106 @@ export function Hero({ onShop, onSize }: { onShop: () => void; onSize: () => voi
   );
 }
 
-function CatchVideo({ src, poster, index, active, onActivate }: { src: string; poster: string; index: number; active: boolean; onActivate: () => void }) {
-  const wrap = useRef<HTMLDivElement>(null);
+function Stars({ n, className = "h-4 w-4" }: { n: number; className?: string }) {
+  return (
+    <span className="flex justify-center gap-0.5 text-primary" role="img" aria-label={`Rated ${n} out of 5`}>
+      {Array.from({ length: 5 }, (_, i) => <Star key={i} className={className} fill={i < n ? "currentColor" : "none"} />)}
+    </span>
+  );
+}
+
+function CatchCard({ item, near, active, onActivate, playToken }: { item: CatchVideoItem; near: boolean; active: boolean; onActivate: () => void; playToken: number }) {
   const video = useRef<HTMLVideoElement>(null);
-  const [near, setNear] = useState(false);
   const [playing, setPlaying] = useState(false);
+  const [muted, setMuted] = useState(false);
+
+  // Attach the stream once near the viewport; only the active card buffers beyond metadata.
+  useEffect(() => {
+    const v = video.current;
+    if (!near || !v) return;
+    const seek = () => { if (v.currentTime === 0) v.currentTime = 0.1; };
+    v.addEventListener("loadedmetadata", seek, { once: true });
+    if (v.canPlayType("application/vnd.apple.mpegurl")) {
+      v.src = item.src;
+      return () => v.removeEventListener("loadedmetadata", seek);
+    }
+    let hls: { destroy: () => void } | undefined;
+    let cancelled = false;
+    void import("hls.js").then(({ default: Hls }) => {
+      if (cancelled || !Hls.isSupported()) return;
+      const h = new Hls({ startLevel: 0, maxBufferLength: active ? 30 : 2 });
+      h.loadSource(item.src);
+      h.attachMedia(v);
+      hls = h;
+    });
+    return () => { cancelled = true; hls?.destroy(); v.removeEventListener("loadedmetadata", seek); };
+  }, [near, item.src, active]);
+
+  useEffect(() => { if (!active) video.current?.pause(); }, [active]);
+
+  const toggle = () => {
+    const v = video.current;
+    if (!v) return;
+    if (v.paused) { v.muted = muted; void v.play().catch(() => setPlaying(false)); }
+    else v.pause();
+  };
+
+  useEffect(() => { if (playToken && active) toggle(); }, [playToken]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  return (
+    <div className="catch-card" onClick={active ? undefined : onActivate}>
+      {near && (
+        <video
+          ref={video}
+          playsInline
+          preload="metadata"
+          onPlay={() => setPlaying(true)}
+          onPause={() => setPlaying(false)}
+          onEnded={() => setPlaying(false)}
+          onClick={active ? toggle : undefined}
+          className="h-full w-full object-cover"
+        />
+      )}
+      <div className="catch-overlay" />
+      {!playing && (
+        <button type="button" tabIndex={active ? 0 : -1} className="catch-play" aria-label={active ? `Play video from ${item.name}` : `Show video from ${item.name}`} onClick={(e) => { e.stopPropagation(); if (active) toggle(); else onActivate(); }}>
+          <Play className="h-5 w-5 translate-x-0.5" fill="currentColor" />
+        </button>
+      )}
+      {active && playing && (
+        <button type="button" className="catch-mute" aria-label={muted ? "Unmute" : "Mute"} onClick={(e) => { e.stopPropagation(); const m = !muted; setMuted(m); if (video.current) video.current.muted = m; }}>
+          {muted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
+        </button>
+      )}
+      <div className="pointer-events-none absolute inset-x-0 bottom-5 flex flex-col items-center gap-1.5">
+        <span className="flex items-center gap-1.5 text-base font-semibold text-foreground">
+          {item.name}
+          {item.verified && (
+            <span role="img" aria-label="Verified buyer" className="flex h-4 w-4 items-center justify-center rounded-full bg-primary text-primary-foreground">
+              <Check className="h-2.5 w-2.5" strokeWidth={4} />
+            </span>
+          )}
+        </span>
+        <Stars n={item.rating} />
+      </div>
+    </div>
+  );
+}
+
+export function Catches({ items }: { items: CatchVideoItem[] }) {
+  const count = items.length;
+  // Duplicated so the loop always has enough slides to wrap on wide screens.
+  const slides = [...items, ...items];
+  const start = Math.min(2, count - 1);
+  const [carouselRef, api] = useEmblaCarousel({ align: "center", loop: true, startIndex: start, duration: reducedMotion() ? 0 : 25 });
+  const [snap, setSnap] = useState(start);
+  const [near, setNear] = useState(false);
+  const [playToken, setPlayToken] = useState(0);
+  const region = useRef<HTMLDivElement>(null);
+  const selected = snap % count;
 
   useEffect(() => {
-    const el = wrap.current;
+    const el = region.current;
     if (!el) return;
     const io = new IntersectionObserver(([e]) => e?.isIntersecting && (setNear(true), io.disconnect()), { rootMargin: "300px" });
     io.observe(el);
@@ -104,122 +196,58 @@ function CatchVideo({ src, poster, index, active, onActivate }: { src: string; p
   }, []);
 
   useEffect(() => {
-    const v = video.current;
-    if (!near || !v) return;
-    if (v.canPlayType("application/vnd.apple.mpegurl")) {
-      v.src = src;
-      return;
-    }
-    let hls: { destroy: () => void } | undefined;
-    let cancelled = false;
-    void import("hls.js").then(({ default: Hls }) => {
-      if (cancelled || !Hls.isSupported()) return;
-      const h = new Hls({ startLevel: 0 });
-      h.loadSource(src);
-      h.attachMedia(v);
-      hls = h;
-    });
-    return () => {
-      cancelled = true;
-      hls?.destroy();
-    };
-  }, [near, src]);
-
-  useEffect(() => {
-    if (!active) video.current?.pause();
-  }, [active]);
-
-  const toggle = () => {
-    if (!active) {
-      onActivate();
-      return;
-    }
-    const v = video.current;
-    if (!v) return;
-    if (v.paused) void v.play().catch(() => setPlaying(false));
-    else v.pause();
-  };
-
-  return (
-    <div ref={wrap} className="relative h-full w-full overflow-hidden bg-frame">
-      {!near && <SafeImg src={poster} alt="Customer catch on a Masters stickbait" loading="lazy" className="h-full w-full object-cover" />}
-      {near && (
-        <video
-          ref={video}
-          poster={poster}
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          onPlay={() => setPlaying(true)}
-          onPause={() => setPlaying(false)}
-          className="h-full w-full object-cover"
-        />
-      )}
-      <div className="catch-overlay" />
-      <Button variant="ghost" type="button" onClick={toggle} aria-label={active ? `${playing ? "Pause" : "Play"} customer catch video ${index}` : `Focus customer catch video ${index}`} className="absolute inset-0 h-full w-full rounded-none p-0 text-media-foreground hover:bg-transparent hover:text-media-foreground">
-        {!playing && (
-          <span className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-media-foreground bg-gallery-ink/20">
-            <Play className="h-5 w-5" fill="currentColor" />
-          </span>
-        )}
-      </Button>
-    </div>
-  );
-}
-
-function CatchPhoto({ src, caption }: { src: string; caption?: string | undefined }) {
-  const [hidden, setHidden] = useState(false);
-  if (hidden) return null;
-  return (
-    <figure className="relative h-full w-full overflow-hidden bg-frame">
-      <SafeImg src={src} alt={caption ?? "Customer catch on a Masters stickbait"} loading="lazy" onHide={() => setHidden(true)} className="h-full w-full object-cover" />
-      <div className="catch-overlay" />
-      {caption && <figcaption className="catch-caption">{caption}</figcaption>}
-    </figure>
-  );
-}
-
-export function Catches({ items }: { items: CatchItem[] }) {
-  const [carouselRef, api] = useEmblaCarousel({ align: "center", loop: true, startIndex: Math.min(2, items.length - 1) });
-  const [selected, setSelected] = useState(Math.min(2, items.length - 1));
-
-  useEffect(() => {
     if (!api) return;
-    const sync = () => setSelected(api.selectedScrollSnap());
+    const sync = () => setSnap(api.selectedScrollSnap());
     sync();
     api.on("select", sync);
     api.on("reInit", sync);
-    return () => {
-      api.off("select", sync);
-      api.off("reInit", sync);
-    };
+    return () => { api.off("select", sync); api.off("reInit", sync); };
   }, [api]);
 
+  const total = slides.length;
+  const goTo = (i: number) => {
+    // pick the closest duplicate of item i
+    const a = i, b = i + count;
+    const d = (x: number) => Math.min(Math.abs(x - snap), total - Math.abs(x - snap));
+    api?.scrollTo(d(a) <= d(b) ? a : b);
+  };
+
   return (
-    <div className="catch-carousel" role="region" aria-roledescription="carousel" aria-label="Customer catches">
-      <div ref={carouselRef} className="catch-viewport" onKeyDown={(event) => {
-        if (event.key === "ArrowLeft") { event.preventDefault(); api?.scrollPrev(); }
-        if (event.key === "ArrowRight") { event.preventDefault(); api?.scrollNext(); }
-      }}>
+    <div
+      ref={region}
+      tabIndex={0}
+      className="catch-carousel"
+      role="region"
+      aria-roledescription="carousel"
+      aria-label="Customer catch videos"
+      onKeyDown={(e) => {
+        if (e.target !== e.currentTarget) return;
+        if (e.key === "ArrowLeft") { e.preventDefault(); api?.scrollPrev(); }
+        if (e.key === "ArrowRight") { e.preventDefault(); api?.scrollNext(); }
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setPlayToken((t) => t + 1); }
+      }}
+    >
+      <div ref={carouselRef} className="catch-viewport">
         <div className="catch-track">
-          {items.map((it, i) => (
-            <div key={it.src} role="group" aria-roledescription="slide" aria-label={`${i + 1} of ${items.length}`} aria-current={selected === i ? "true" : undefined} data-distance={Math.min(Math.abs(i - selected), items.length - Math.abs(i - selected))} className="catch-slide">
-              <div className="catch-media">
-                {it.kind === "video" ? <CatchVideo src={it.src} poster={it.poster} index={i + 1} active={selected === i} onActivate={() => api?.scrollTo(i)} /> : (
-                  <>
-                    <CatchPhoto src={it.src} caption={it.caption} />
-                    {selected !== i && <Button type="button" variant="ghost" aria-label={`Focus customer catch photo ${i + 1}`} onClick={() => api?.scrollTo(i)} className="absolute inset-0 h-full w-full hover:bg-transparent" />}
-                  </>
-                )}
+          {slides.map((it, i) => {
+            const raw = Math.abs(i - snap);
+            const dist = Math.min(raw, total - raw);
+            return (
+              <div key={i} role="group" aria-roledescription="slide" aria-label={`${(i % count) + 1} of ${count}`} aria-hidden={dist > 2 || (i !== snap && i % count === selected) ? true : undefined} data-distance={dist} className="catch-slide">
+                <CatchCard item={it} near={near && dist <= 2} active={i === snap} onActivate={() => api?.scrollTo(i)} playToken={i === snap ? playToken : 0} />
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
-      <Button type="button" variant="ghost" size="icon" className="catch-arrow catch-arrow-prev" aria-label="Previous catch" title="Previous catch" onClick={() => api?.scrollPrev()}><ArrowLeft /></Button>
-      <span className="sr-only" aria-live="polite">Catch {selected + 1} of {items.length}</span>
-      <Button type="button" variant="ghost" size="icon" className="catch-arrow catch-arrow-next" aria-label="Next catch" title="Next catch" onClick={() => api?.scrollNext()}><ArrowRight /></Button>
+      <button type="button" className="catch-arrow catch-arrow-prev" aria-label="Previous video" onClick={() => api?.scrollPrev()}><ArrowLeft className="h-5 w-5" /></button>
+      <button type="button" className="catch-arrow catch-arrow-next" aria-label="Next video" onClick={() => api?.scrollNext()}><ArrowRight className="h-5 w-5" /></button>
+      <div className="catch-dots">
+        {items.map((it, i) => (
+          <button key={i} type="button" aria-label={`Go to video ${i + 1}`} onClick={() => goTo(i)} className={`h-2 w-2 rounded-full ${i === selected ? "bg-primary" : "bg-muted-foreground/40"}`} />
+        ))}
+      </div>
+      <span className="sr-only" aria-live="polite">Video {selected + 1} of {count}</span>
     </div>
   );
 }
