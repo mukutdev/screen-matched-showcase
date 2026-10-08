@@ -1,13 +1,12 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Minus, Plus } from "lucide-react";
-import { toast } from "sonner";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Drawer, DrawerContent, DrawerTitle, DrawerDescription } from "@/components/ui/drawer";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { COLOURS, type ColourId, type Product } from "@/data/collection";
+import { COLOURS, defaultColour, img, photoFor, variantId, type ColourId, type Product } from "@/data/collection";
 import { money, nextTier, type CartLine } from "@/lib/cart";
-import { Swatch } from "./LureImage";
-import { specLine } from "./ProductCard";
+import { Swatch } from "./Media";
+import { altFor, specLine } from "./ProductCard";
 
 export function ResponsiveModal({
   open,
@@ -72,13 +71,15 @@ export function QuickAdd({
   const [variant, setVariant] = useState(0);
   const [qty, setQty] = useState(1);
   const [notify, setNotify] = useState<ColourId | null>(null);
+  const [notified, setNotified] = useState<ColourId[]>([]);
 
   useEffect(() => {
     if (product) {
-      setColour(product.colours.find((c) => !product.soldOut.includes(c)) ?? null);
+      setColour(product.colours.every((c) => product.soldOut.includes(c)) ? null : defaultColour(product));
       setVariant(0);
       setQty(1);
       setNotify(null);
+      setNotified([]);
     }
   }, [product]);
 
@@ -94,6 +95,9 @@ export function QuickAdd({
       description={`${product.name} · ${product.size}mm · ${v.weight}g · ${specLine(product).split(" · ").at(-1)}`}
       returnFocus={trigger}
     >
+      <div className="mt-4 aspect-[4/3] overflow-hidden rounded-xl bg-frame">
+        {colour && <img src={img(photoFor(product, colour), 900)} alt={altFor(product, colour)} className="h-full w-full object-contain p-[6%]" />}
+      </div>
       {product.variants.length > 1 && (
         <fieldset className="mt-4">
           <legend className="mb-2 text-sm font-semibold">Weight</legend>
@@ -104,7 +108,7 @@ export function QuickAdd({
                 type="button"
                 aria-pressed={i === variant}
                 onClick={() => setVariant(i)}
-                className="min-h-11 rounded-lg border border-input px-3 text-sm aria-pressed:border-primary aria-pressed:bg-accent aria-pressed:font-semibold"
+                className="min-h-11 rounded-full border border-input px-3 text-sm aria-pressed:border-primary aria-pressed:bg-secondary aria-pressed:font-semibold"
               >
                 {x.weight}g · {money(x.price)}
               </button>
@@ -126,21 +130,23 @@ export function QuickAdd({
                   aria-label={`${name}${so ? ", sold out" : ""}`}
                   disabled={so}
                   onClick={() => setColour(c)}
-                  className="flex min-h-11 w-full items-center gap-2 rounded-lg border border-input px-2 text-left text-sm aria-pressed:border-primary aria-pressed:bg-accent disabled:text-muted-foreground"
+                  className="flex min-h-14 w-full items-center gap-2 rounded-xl border border-input px-2 text-left text-sm aria-pressed:border-primary aria-pressed:bg-secondary disabled:text-muted-foreground"
                 >
-                  <Swatch colour={c} soldOut={so} size={28} />
+                  <Swatch colour={c} soldOut={so} size={36} />
                   <span className="leading-tight">
                     {name}
                     {so && <span className="block text-xs">Sold out</span>}
                   </span>
                 </button>
                 {so &&
-                  (notify === c ? (
+                  (notified.includes(c) ? (
+                    <p className="mt-1 text-xs text-success" role="status">We'll email you when it's back.</p>
+                  ) : notify === c ? (
                     <form
                       className="mt-1 flex gap-1"
                       onSubmit={(e) => {
                         e.preventDefault();
-                        toast(`We'll email you when ${name} is back.`);
+                        setNotified((n) => [...n, c]);
                         setNotify(null);
                       }}
                     >
@@ -149,9 +155,9 @@ export function QuickAdd({
                         required
                         aria-label={`Email for ${name} restock`}
                         placeholder="Email"
-                        className="min-h-11 w-full min-w-0 rounded-lg border border-input bg-card px-2 text-sm"
+                        className="min-h-11 w-full min-w-0 rounded-full border border-input bg-card px-2 text-sm"
                       />
-                      <button className="min-h-11 rounded-lg bg-primary px-2 text-xs font-semibold text-primary-foreground">OK</button>
+                      <button className="min-h-11 rounded-full bg-primary px-2 text-xs font-semibold text-primary-foreground">OK</button>
                     </form>
                   ) : (
                     <button type="button" onClick={() => setNotify(c)} className="min-h-11 text-xs font-semibold text-primary underline">
@@ -165,7 +171,7 @@ export function QuickAdd({
       </fieldset>
       <div className="mt-4 flex items-center gap-3">
         <span className="text-sm font-semibold">Qty</span>
-        <div className="flex items-center rounded-lg border border-input">
+        <div className="flex items-center rounded-full border border-input">
           <button type="button" aria-label="Decrease quantity" onClick={() => setQty((q) => Math.max(1, q - 1))} className="flex h-11 w-11 items-center justify-center">
             <Minus className="h-4 w-4" />
           </button>
@@ -188,9 +194,11 @@ export function QuickAdd({
             spec: `${product.size}mm · ${v.weight}g`,
             price: v.price,
             qty,
+            variantId: variantId(product, c.id, variant),
+            image: img(photoFor(product, c.id), 200),
           });
         }}
-        className="mt-4 min-h-12 w-full rounded-lg bg-primary font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+        className="mt-4 min-h-12 w-full rounded-full bg-primary font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
       >
         Add to cart · {money(v.price * qty)}
       </button>

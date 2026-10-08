@@ -1,7 +1,6 @@
 import { Sheet, SheetContent, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { FREE_SHIPPING_THRESHOLD } from "@/data/collection";
-import { cartTotals, money, nextTier, type CartLine } from "@/lib/cart";
-import { Swatch } from "./LureImage";
+import { cartPermalink, cartTotals, money, nextTier, type CartLine } from "@/lib/cart";
 
 export function CartDrawer({
   open,
@@ -31,9 +30,10 @@ export function CartDrawer({
           </div>
         </div>
         <ul className="flex-1 divide-y divide-border overflow-y-auto">
+          {lines.length === 0 && <li className="py-6 text-sm text-muted-foreground">Your cart is empty.</li>}
           {lines.map((l) => (
             <li key={l.key} className="flex items-start gap-3 py-3">
-              <Swatch colour={l.colour} size={36} />
+              <img src={l.image} alt="" width={64} height={64} className="h-16 w-16 shrink-0 rounded-lg bg-frame object-contain p-1" />
               <div className="flex-1 text-sm">
                 <p className="font-bold">{l.name}</p>
                 <p className="text-muted-foreground">
@@ -55,7 +55,7 @@ export function CartDrawer({
             <span>Lures</span>
             <span>{money(t.gross)}</span>
           </div>
-          <div className="flex justify-between text-primary">
+          <div className="flex justify-between text-success">
             <span>Bundle discount {t.pct ? `(${t.pct}%)` : ""}</span>
             <span>−{money(t.discount)}</span>
           </div>
@@ -63,7 +63,12 @@ export function CartDrawer({
             <span>Subtotal</span>
             <span>{money(t.subtotal)}</span>
           </div>
-          <button disabled className="mt-2 min-h-12 w-full rounded-lg bg-primary font-semibold text-primary-foreground opacity-50">
+          <button
+            type="button"
+            disabled={!lines.length}
+            onClick={() => window.location.assign(cartPermalink(lines))}
+            className="mt-2 min-h-12 w-full rounded-full bg-primary font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+          >
             Checkout
           </button>
         </div>
