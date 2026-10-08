@@ -234,6 +234,11 @@ export const RELATED = [
 ];
 
 const V = (id: string) => `https://cdn.shopify.com/videos/c/vp/${id}/${id}.m3u8`;
+export const HERO = {
+  video: STORE + "/cdn/shop/videos/c/vp/b58a1e70038743c2aca263098138ea65/b58a1e70038743c2aca263098138ea65.HD-1080p-7.2Mbps-93999858.mp4?v=0",
+  poster: STORE + "/cdn/shop/files/preview_images/b58a1e70038743c2aca263098138ea65.thumbnail.0000000000_1920x.jpg?v=1789031058",
+};
+
 export type CatchVideo = { name: string; rating: number; verified: boolean; src: string };
 // Store-domain .m3u8 paths resolve relatively and fail, so the same streams load from the Shopify CDN.
 export const CATCHES: CatchVideo[] = [
