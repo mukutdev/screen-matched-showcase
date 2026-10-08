@@ -103,7 +103,7 @@ function CollectionPage() {
           <ActiveChips s={s} set={set} count={results.length} />
         </div>
 
-        <div ref={gridRef} className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-6 min-[1200px]:grid-cols-4">
+        <div ref={gridRef} className="mt-4 grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-6 lg:grid-cols-4">
           {results.map((p, i) => (
             <Fragment key={p.id}>
               {i === 6 && showBundle && <BundleTile photo={tropic} />}

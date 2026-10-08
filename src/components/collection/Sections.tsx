@@ -78,7 +78,7 @@ export function Hero({ onShop, onSize }: { onShop: () => void; onSize: () => voi
           type="button"
           onClick={toggle}
           aria-label={playing ? "Pause background video" : "Play background video"}
-          className="absolute bottom-16 right-4 flex h-11 w-11 items-center justify-center rounded-full border border-foreground/30 bg-background/50 backdrop-blur md:right-6"
+          className="absolute right-4 top-4 flex h-11 md:top-auto md:bottom-16 w-11 items-center justify-center rounded-full border border-foreground/30 bg-background/50 backdrop-blur md:right-6"
         >
           {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
         </button>
