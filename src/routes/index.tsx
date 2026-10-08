@@ -211,8 +211,8 @@ function CollectionPage() {
         </section>
 
         <section className="mt-24" aria-labelledby="cc">
-          <div className="flex flex-wrap items-end justify-between gap-2">
-            <h2 id="cc" className={h2}>Caught on the Masters</h2>
+          <div className="flex flex-col gap-2 md:flex-row md:items-baseline md:justify-between">
+            <h2 id="cc" className="text-[26px] font-semibold md:text-[32px]">Caught on the Masters</h2>
             <p className="text-sm text-muted-foreground"><span className="text-primary">★ 4.96</span> from 65 verified reviews</p>
           </div>
           <Catches items={CATCHES} />
