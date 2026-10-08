@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Fragment, useEffect, useMemo, useRef, useState } from "react";
-import { Check } from "lucide-react";
+import { ArrowUpRight, Check, Mail } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { CATCHES, COLOURS, FAQ, HERO, RELATED, SIZE_GUIDE, img, type Product } from "@/data/collection";
 import { apply, DEFAULT_STATE, fromSearch, toSearch, type FilterState } from "@/lib/filters";
@@ -242,20 +244,25 @@ function CollectionPage() {
         </section>
       </main>
 
-      <section className="mt-24 border-t border-border bg-card" aria-labelledby="em">
-        <div className="mx-auto max-w-[1320px] px-4 py-14 md:px-6 md:py-20">
-          <h2 id="em" className={h2}>Get notified when the next batch lands</h2>
-          <p className="mt-2 max-w-xl text-muted-foreground">Register your interest — we'll email you what's in production and when the next batch is available.</p>
-          {joined ? (
-            <p role="status" className="mt-6 flex items-center gap-2 font-medium text-success"><Check className="h-5 w-5" /> You're on the list. We'll be in touch when the next batch is ready.</p>
-          ) : (
-            <form className="mt-6 flex max-w-lg gap-2" onSubmit={(e) => { e.preventDefault(); setJoined(true); }}>
-              <label htmlFor="email" className="sr-only">Email</label>
-              <input id="email" type="email" required placeholder="you@email.com" className="min-h-12 min-w-0 flex-1 rounded-full border border-input bg-background px-5 placeholder:text-muted-foreground" />
-              <button className="min-h-12 rounded-full bg-primary px-6 font-medium text-primary-foreground hover:bg-primary/90">Join</button>
-            </form>
-          )}
-          <p className="mt-3 text-[13px] text-muted-foreground">No spam. Unsubscribe any time.</p>
+      <section className="mt-24 border-y border-border bg-card" aria-labelledby="em">
+        <div className="mx-auto grid max-w-[1320px] items-center gap-10 px-4 py-14 md:grid-cols-[1.1fr_1fr] md:gap-16 md:px-6 md:py-20">
+          <div>
+            <div className="mb-5 flex items-center gap-3 text-primary"><Mail className="h-5 w-5" /><p className="eyebrow">Next batch · Masters series</p></div>
+            <h2 id="em" className="max-w-lg text-[32px] font-semibold leading-tight md:text-[40px]">Get notified when<br className="hidden md:block" /> the next batch lands.</h2>
+            <p className="mt-4 max-w-md text-muted-foreground">Register your interest — we'll email you what's in production and when the next batch is available.</p>
+          </div>
+          <div className="border-t border-border pt-8 md:border-l md:border-t-0 md:pl-12 md:pt-0">
+            {joined ? (
+              <div role="status" className="flex min-h-36 items-start gap-4 py-5"><span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-success/10 text-success"><Check className="h-5 w-5" /></span><div><p className="text-xl font-medium">You're on the list.</p><p className="mt-2 text-muted-foreground">We'll be in touch when the next batch is ready.</p></div></div>
+            ) : (
+              <form onSubmit={(e) => { e.preventDefault(); setJoined(true); }}>
+                <label htmlFor="email" className="mb-3 block text-sm font-medium">Email address</label>
+                <Input id="email" name="email" type="email" autoComplete="email" required placeholder="you@email.com" className="h-14 rounded-lg bg-background px-4 text-base md:text-base" />
+                <Button type="submit" className="mt-3 h-14 w-full justify-between rounded-lg px-5 text-base shadow-none">Get notified <ArrowUpRight /></Button>
+              </form>
+            )}
+            <p className="mt-4 text-[13px] text-muted-foreground">No spam. Unsubscribe any time.</p>
+          </div>
         </div>
       </section>
 

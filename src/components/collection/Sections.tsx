@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { Pause, Play } from "lucide-react";
+import { ArrowLeft, ArrowRight, Pause, Play } from "lucide-react";
+import useEmblaCarousel from "embla-carousel-react";
+import { Button } from "@/components/ui/button";
 import { HERO, type CatchItem } from "@/data/collection";
 import { SafeImg } from "./Media";
 
@@ -87,7 +89,7 @@ export function Hero({ onShop, onSize }: { onShop: () => void; onSize: () => voi
   );
 }
 
-function CatchVideo({ src, index }: { src: string; index: number }) {
+function CatchVideo({ src, index, active, onActivate }: { src: string; index: number; active: boolean; onActivate: () => void }) {
   const wrap = useRef<HTMLDivElement>(null);
   const video = useRef<HTMLVideoElement>(null);
   const [near, setNear] = useState(false);
@@ -123,15 +125,23 @@ function CatchVideo({ src, index }: { src: string; index: number }) {
     };
   }, [near, src]);
 
+  useEffect(() => {
+    if (!active) video.current?.pause();
+  }, [active]);
+
   const toggle = () => {
+    if (!active) {
+      onActivate();
+      return;
+    }
     const v = video.current;
     if (!v) return;
-    if (v.paused) void v.play();
+    if (v.paused) void v.play().catch(() => setPlaying(false));
     else v.pause();
   };
 
   return (
-    <div ref={wrap} className="relative aspect-[9/16] w-44 shrink-0 snap-start overflow-hidden rounded-xl bg-frame md:w-56">
+    <div ref={wrap} className="relative h-full w-full overflow-hidden rounded-lg bg-frame">
       {near && (
         <video
           ref={video}
@@ -144,13 +154,13 @@ function CatchVideo({ src, index }: { src: string; index: number }) {
           className="h-full w-full object-cover"
         />
       )}
-      <button type="button" onClick={toggle} aria-label={`${playing ? "Pause" : "Play"} customer catch video ${index}`} className="absolute inset-0 flex items-center justify-center">
+      <Button variant="ghost" type="button" onClick={toggle} aria-label={active ? `${playing ? "Pause" : "Play"} customer catch video ${index}` : `Focus customer catch video ${index}`} className="absolute inset-0 h-full w-full rounded-none p-0 hover:bg-transparent">
         {!playing && (
-          <span className="flex h-12 w-12 items-center justify-center rounded-full bg-background/70 backdrop-blur">
-            <Play className="h-5 w-5" />
+          <span className={`flex h-14 w-14 items-center justify-center rounded-full border border-foreground/25 bg-background/70 backdrop-blur transition-opacity ${active ? "opacity-100" : "opacity-70"}`}>
+            <Play className="h-5 w-5" fill="currentColor" />
           </span>
         )}
-      </button>
+      </Button>
     </div>
   );
 }
@@ -159,7 +169,7 @@ function CatchPhoto({ src, caption }: { src: string; caption?: string | undefine
   const [hidden, setHidden] = useState(false);
   if (hidden) return null;
   return (
-    <figure className="relative aspect-[4/5] w-56 shrink-0 snap-start overflow-hidden rounded-xl bg-frame md:w-72">
+    <figure className="relative h-full w-full overflow-hidden rounded-lg bg-frame">
       <SafeImg src={src} alt={caption ?? "Customer catch on a Masters stickbait"} loading="lazy" onHide={() => setHidden(true)} className="h-full w-full object-cover" />
       {caption && <figcaption className="absolute inset-x-0 bottom-0 bg-background/70 px-3 py-2 text-[13px] font-medium backdrop-blur">{caption}</figcaption>}
     </figure>
@@ -167,12 +177,47 @@ function CatchPhoto({ src, caption }: { src: string; caption?: string | undefine
 }
 
 export function Catches({ items }: { items: CatchItem[] }) {
-  let v = 0;
+  const [carouselRef, api] = useEmblaCarousel({ align: "center", loop: true, startIndex: Math.min(2, items.length - 1) });
+  const [selected, setSelected] = useState(Math.min(2, items.length - 1));
+
+  useEffect(() => {
+    if (!api) return;
+    const sync = () => setSelected(api.selectedScrollSnap());
+    sync();
+    api.on("select", sync);
+    api.on("reInit", sync);
+    return () => {
+      api.off("select", sync);
+      api.off("reInit", sync);
+    };
+  }, [api]);
+
   return (
-    <div className="-mx-4 mt-6 flex snap-x items-start gap-3 overflow-x-auto px-4 pb-2 no-scrollbar md:-mx-6 md:gap-4 md:px-6">
-      {items.map((it, i) =>
-        it.kind === "video" ? <CatchVideo key={i} src={it.src} index={++v} /> : <CatchPhoto key={i} src={it.src} caption={it.caption} />,
-      )}
+    <div className="mt-8" role="region" aria-roledescription="carousel" aria-label="Customer catches">
+      <div ref={carouselRef} className="-mx-4 overflow-hidden md:mx-0" onKeyDown={(event) => {
+        if (event.key === "ArrowLeft") { event.preventDefault(); api?.scrollPrev(); }
+        if (event.key === "ArrowRight") { event.preventDefault(); api?.scrollNext(); }
+      }}>
+        <div className="flex touch-pan-y">
+          {items.map((it, i) => (
+            <div key={it.src} role="group" aria-roledescription="slide" aria-label={`${i + 1} of ${items.length}`} aria-current={selected === i ? "true" : undefined} className="min-w-0 flex-[0_0_72%] px-2 md:flex-[0_0_32%] md:px-3 lg:flex-[0_0_25%]">
+              <div className={`relative h-[420px] rounded-lg transition-opacity duration-300 md:h-[480px] ${selected === i ? "opacity-100 ring-1 ring-primary ring-offset-4 ring-offset-background" : "opacity-45 hover:opacity-75"}`}>
+                {it.kind === "video" ? <CatchVideo src={it.src} index={i + 1} active={selected === i} onActivate={() => api?.scrollTo(i)} /> : (
+                  <>
+                    <CatchPhoto src={it.src} caption={it.caption} />
+                    {selected !== i && <Button type="button" variant="ghost" aria-label={`Focus customer catch photo ${i + 1}`} onClick={() => api?.scrollTo(i)} className="absolute inset-0 h-full w-full hover:bg-transparent" />}
+                  </>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="mt-6 flex items-center justify-center gap-5">
+        <Button type="button" variant="outline" size="icon" className="h-11 w-11 rounded-full" aria-label="Previous catch" title="Previous catch" onClick={() => api?.scrollPrev()}><ArrowLeft /></Button>
+        <p className="min-w-16 text-center text-sm tabular-nums text-muted-foreground" aria-live="polite"><span className="font-medium text-foreground">{String(selected + 1).padStart(2, "0")}</span> / {String(items.length).padStart(2, "0")}</p>
+        <Button type="button" variant="outline" size="icon" className="h-11 w-11 rounded-full" aria-label="Next catch" title="Next catch" onClick={() => api?.scrollNext()}><ArrowRight /></Button>
+      </div>
     </div>
   );
 }
