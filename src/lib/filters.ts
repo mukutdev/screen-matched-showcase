@@ -7,15 +7,17 @@ export interface FilterState {
   water: WaterBand[];
   colours: ColourId[];
   inStock: boolean;
+  size: number | null;
   sort: SortMode;
 }
 
-export const DEFAULT_STATE: FilterState = { action: "all", water: [], colours: [], inStock: false, sort: "size" };
+export const DEFAULT_STATE: FilterState = { action: "all", water: [], colours: [], inStock: false, size: null, sort: "size" };
 
 const minPrice = (p: Product) => Math.min(...p.variants.map((v) => v.price));
 
 export function matches(p: Product, s: FilterState): boolean {
   if (s.action !== "all" && (p.line === "gen2" || p.action !== s.action)) return false;
+  if (s.size && (p.line === "gen2" || p.size !== s.size)) return false;
   if (s.water.length && !s.water.includes(bandForSize(p.size))) return false;
   if (s.colours.length) {
     const ok = s.colours.some(
@@ -61,6 +63,7 @@ const P = {
   water: "filter.p.m.custom.water",
   colour: "filter.v.option.colour",
   stock: "filter.v.availability",
+  size: "filter.p.m.custom.size",
   sort: "sort_by",
 };
 const SORT_PARAM: Record<SortMode, string> = {
@@ -76,6 +79,7 @@ export function toSearch(s: FilterState): string {
   s.water.forEach((w) => q.append(P.water, w));
   s.colours.forEach((c) => q.append(P.colour, c));
   if (s.inStock) q.set(P.stock, "1");
+  if (s.size) q.set(P.size, String(s.size));
   if (s.sort !== "size") q.set(P.sort, SORT_PARAM[s.sort]);
   const str = q.toString();
   return str ? `?${str}` : "";
@@ -90,6 +94,7 @@ export function fromSearch(search: string): FilterState {
     water: q.getAll(P.water).filter((w): w is WaterBand => ["estuary", "inshore", "reef", "bluewater"].includes(w)),
     colours: q.getAll(P.colour) as ColourId[],
     inStock: q.get(P.stock) === "1",
+    size: Number(q.get(P.size)) || null,
     sort: (sortEntry?.[0] as SortMode) ?? "size",
   };
 }

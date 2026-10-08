@@ -6,7 +6,7 @@ import { Switch } from "@/components/ui/switch";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { COLOURS, WATER_BANDS, type Action } from "@/data/collection";
 import { countWith, optionCount, type FilterState, type SortMode } from "@/lib/filters";
-import { Swatch } from "./LureImage";
+import { Swatch } from "./Media";
 
 type Set = (patch: Partial<FilterState>) => void;
 
@@ -19,7 +19,7 @@ export function ActionToggle({ s, set, compact }: { s: FilterState; set: Set; co
     { id: "sinking", label: `Sinking (${countWith(s, { action: "sinking" })})` },
   ];
   return (
-    <div className="flex shrink-0 rounded-lg border border-input bg-card p-0.5" role="group" aria-label="Action">
+    <div className="flex shrink-0 rounded-full border border-input bg-card p-0.5" role="group" aria-label="Action">
       {opts.map((o) => {
         const disabled = o.id !== "all" && countWith(s, { action: o.id }) === 0;
         return (
@@ -29,7 +29,7 @@ export function ActionToggle({ s, set, compact }: { s: FilterState; set: Set; co
             aria-pressed={s.action === o.id}
             disabled={disabled}
             onClick={() => set({ action: o.id })}
-            className={`${compact ? "min-h-9" : "min-h-10"} whitespace-nowrap rounded-md px-3 text-sm aria-pressed:bg-primary aria-pressed:font-semibold aria-pressed:text-primary-foreground disabled:opacity-40`}
+            className={`${compact ? "min-h-9" : "min-h-10"} whitespace-nowrap rounded-full px-3 text-sm aria-pressed:bg-primary aria-pressed:font-semibold aria-pressed:text-primary-foreground disabled:opacity-40`}
           >
             {o.label}
           </button>
@@ -40,7 +40,7 @@ export function ActionToggle({ s, set, compact }: { s: FilterState; set: Set; co
 }
 
 const chip =
-  "min-h-11 shrink-0 whitespace-nowrap rounded-full border border-input bg-card px-3.5 text-sm aria-pressed:border-primary aria-pressed:bg-accent aria-pressed:font-semibold aria-pressed:text-accent-foreground disabled:opacity-40";
+  "min-h-11 shrink-0 whitespace-nowrap rounded-full border border-input bg-card px-3.5 text-sm aria-pressed:border-primary aria-pressed:bg-primary aria-pressed:font-semibold aria-pressed:text-primary-foreground disabled:opacity-40";
 
 export function activeCount(s: FilterState) {
   return (s.action !== "all" ? 1 : 0) + s.water.length + s.colours.length + (s.inStock ? 1 : 0);
@@ -68,7 +68,7 @@ function PanelBody({ s, set }: { s: FilterState; set: Set }) {
                 aria-pressed={on}
                 disabled={!on && n === 0}
                 onClick={() => set({ colours: toggle(s.colours, c.id) })}
-                className="flex min-h-11 items-center gap-2 rounded-lg border border-input px-2 text-left text-sm aria-pressed:border-primary aria-pressed:bg-accent disabled:opacity-40"
+                className="flex min-h-11 items-center gap-2 rounded-full border border-input px-2 text-left text-sm aria-pressed:border-primary aria-pressed:bg-accent disabled:opacity-40"
               >
                 <Swatch colour={c.id} size={24} />
                 <span>
@@ -135,7 +135,7 @@ export function FilterPanel({
               <button
                 type="button"
                 onClick={() => onOpenChange(false)}
-                className="min-h-12 w-full rounded-lg bg-primary font-semibold text-primary-foreground"
+                className="min-h-12 w-full rounded-full bg-primary font-semibold text-primary-foreground"
               >
                 Show {resultCount} lure{resultCount === 1 ? "" : "s"}
               </button>
@@ -173,7 +173,7 @@ export function ControlRow({ s, set, resultCount }: { s: FilterState; set: Set; 
             onClick={() => set({ water: toggle(s.water, b.id) })}
             className={chip}
           >
-            {b.label} <span className="text-muted-foreground">({n})</span>
+            {b.label} <span className="opacity-60">({n})</span>
           </button>
         );
       })}
@@ -189,6 +189,7 @@ export function ControlRow({ s, set, resultCount }: { s: FilterState; set: Set; 
           </button>
         }
       />
+      <span className="ml-auto hidden shrink-0 items-center text-sm text-muted-foreground md:flex">{resultCount} lures</span>
     </div>
   );
 }
@@ -197,7 +198,7 @@ export function StickyBar({ s, set, resultCount, visible }: { s: FilterState; se
   const [open, setOpen] = useState(false);
   return (
     <div
-      className={`fixed inset-x-0 top-0 z-40 flex h-12 items-center justify-between gap-2 border-b border-border bg-background px-4 transition-transform duration-200 md:hidden ${
+      className={`fixed inset-x-0 top-0 z-40 flex h-12 items-center justify-between gap-2 border-b border-border bg-background/80 backdrop-blur-md px-4 transition-transform duration-200 md:hidden ${
         visible ? "translate-y-0" : "-translate-y-full"
       }`}
       aria-hidden={!visible}
@@ -222,6 +223,7 @@ export function StickyBar({ s, set, resultCount, visible }: { s: FilterState; se
 export function ActiveChips({ s, set, count }: { s: FilterState; set: Set; count: number }) {
   const chips: { label: string; remove: () => void }[] = [];
   if (s.action !== "all") chips.push({ label: s.action === "floating" ? "Floating" : "Sinking", remove: () => set({ action: "all" }) });
+  if (s.size) chips.push({ label: `${s.size}mm`, remove: () => set({ size: null }) });
   s.water.forEach((w) => chips.push({ label: WATER_BANDS.find((b) => b.id === w)!.label, remove: () => set({ water: s.water.filter((x) => x !== w) }) }));
   s.colours.forEach((c) => chips.push({ label: COLOURS.find((x) => x.id === c)!.name, remove: () => set({ colours: s.colours.filter((x) => x !== c) }) }));
   if (s.inStock) chips.push({ label: "In stock only", remove: () => set({ inStock: false }) });
@@ -233,7 +235,7 @@ export function ActiveChips({ s, set, count }: { s: FilterState; set: Set; count
         </button>
       ))}
       {chips.length > 0 && (
-        <button type="button" onClick={() => set({ action: "all", water: [], colours: [], inStock: false })} className="min-h-9 px-1 underline">
+        <button type="button" onClick={() => set({ action: "all", water: [], colours: [], inStock: false, size: null })} className="min-h-9 px-1 underline">
           Clear all
         </button>
       )}

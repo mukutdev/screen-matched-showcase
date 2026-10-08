@@ -36,7 +36,29 @@ describe("collection rules", () => {
     expect(nextTier(1)).toEqual({ more: 2, pct: 10 });
   });
   it("free shipping remaining from $129", () => {
-    const t = cartTotals([{ key: "a", productId: "x", name: "", colour: "ghost", colourName: "", spec: "", price: 54.99, qty: 1 }]);
+    const t = cartTotals([{ key: "a", productId: "x", name: "", colour: "ghost", colourName: "", spec: "", price: 54.99, qty: 1, variantId: 1, image: "" }]);
     expect(t.toFree).toBe(74.01);
+  });
+});
+
+import { PRODUCTS, defaultColour, productUrl } from "@/data/collection";
+import { cartPermalink } from "@/lib/cart";
+describe("store links", () => {
+  const get = (id: string) => PRODUCTS.find((p) => p.id === id)!;
+  it("150F card links to Tropic Holo floating variant", () => {
+    expect(productUrl(get("masters-150f"), "tropic-holo")).toBe("https://filletandreleaseco.com/products/stickbaits-masters-floating?variant=43345142874186");
+  });
+  it("125S Blue Pilchard uses sinking id", () => {
+    expect(productUrl(get("masters-125s"), "blue-pilchard")).toContain("floating-stickbaits?variant=43282611699786");
+  });
+  it("GEN II 120G variant", () => {
+    expect(productUrl(get("gen2-pink-lady"), "pink-lady", 2)).toContain("variant=41755795882058");
+  });
+  it("default colour skips sold out", () => {
+    expect(defaultColour(get("masters-250f"))).toBe("tropic-holo");
+    expect(defaultColour(get("masters-150f"), "pink-lady")).toBe("tropic-holo");
+  });
+  it("cart permalink merges quantities", () => {
+    expect(cartPermalink([{ variantId: 1, qty: 2 }, { variantId: 2, qty: 1 }, { variantId: 1, qty: 1 }])).toBe("https://filletandreleaseco.com/cart/1:3,2:1");
   });
 });
