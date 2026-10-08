@@ -173,7 +173,7 @@ export function ControlRow({ s, set, resultCount }: { s: FilterState; set: Set; 
             onClick={() => set({ water: toggle(s.water, b.id) })}
             className={chip}
           >
-            {b.label} <span className="text-muted-foreground">({n})</span>
+            {b.label} <span className="opacity-60">({n})</span>
           </button>
         );
       })}
@@ -189,6 +189,7 @@ export function ControlRow({ s, set, resultCount }: { s: FilterState; set: Set; 
           </button>
         }
       />
+      <span className="ml-auto hidden shrink-0 items-center text-sm text-muted-foreground md:flex">{resultCount} lures</span>
     </div>
   );
 }
