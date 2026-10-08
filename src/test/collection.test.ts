@@ -6,9 +6,9 @@ describe("collection rules", () => {
   it("shows 13 cards by default with GEN II last", () => {
     const r = apply(DEFAULT_STATE);
     expect(r).toHaveLength(13);
-    expect(r[12].id).toBe("gen2-pink-lady");
-    expect(r[0].id).toBe("masters-105f");
-    expect(r[1].id).toBe("masters-105s");
+    expect(r[12]?.id).toBe("gen2-pink-lady");
+    expect(r[0]?.id).toBe("masters-105f");
+    expect(r[1]?.id).toBe("masters-105s");
   });
   it("action filter counts: 7 floating masters, 5 sinking", () => {
     expect(apply({ ...DEFAULT_STATE, action: "sinking" })).toHaveLength(5);
