@@ -19,7 +19,7 @@ export function ActionToggle({ s, set, compact }: { s: FilterState; set: Set; co
     { id: "sinking", label: `Sinking (${countWith(s, { action: "sinking" })})` },
   ];
   return (
-    <div className="flex shrink-0 rounded-lg border border-input bg-card p-0.5" role="group" aria-label="Action">
+    <div className="flex shrink-0 rounded-full border border-input bg-card p-0.5" role="group" aria-label="Action">
       {opts.map((o) => {
         const disabled = o.id !== "all" && countWith(s, { action: o.id }) === 0;
         return (
@@ -29,7 +29,7 @@ export function ActionToggle({ s, set, compact }: { s: FilterState; set: Set; co
             aria-pressed={s.action === o.id}
             disabled={disabled}
             onClick={() => set({ action: o.id })}
-            className={`${compact ? "min-h-9" : "min-h-10"} whitespace-nowrap rounded-md px-3 text-sm aria-pressed:bg-primary aria-pressed:font-semibold aria-pressed:text-primary-foreground disabled:opacity-40`}
+            className={`${compact ? "min-h-9" : "min-h-10"} whitespace-nowrap rounded-full px-3 text-sm aria-pressed:bg-primary aria-pressed:font-semibold aria-pressed:text-primary-foreground disabled:opacity-40`}
           >
             {o.label}
           </button>
@@ -40,7 +40,7 @@ export function ActionToggle({ s, set, compact }: { s: FilterState; set: Set; co
 }
 
 const chip =
-  "min-h-11 shrink-0 whitespace-nowrap rounded-full border border-input bg-card px-3.5 text-sm aria-pressed:border-primary aria-pressed:bg-accent aria-pressed:font-semibold aria-pressed:text-accent-foreground disabled:opacity-40";
+  "min-h-11 shrink-0 whitespace-nowrap rounded-full border border-input bg-card px-3.5 text-sm aria-pressed:border-primary aria-pressed:bg-primary aria-pressed:font-semibold aria-pressed:text-primary-foreground disabled:opacity-40";
 
 export function activeCount(s: FilterState) {
   return (s.action !== "all" ? 1 : 0) + s.water.length + s.colours.length + (s.inStock ? 1 : 0);
@@ -135,7 +135,7 @@ export function FilterPanel({
               <button
                 type="button"
                 onClick={() => onOpenChange(false)}
-                className="min-h-12 w-full rounded-lg bg-primary font-semibold text-primary-foreground"
+                className="min-h-12 w-full rounded-full bg-primary font-semibold text-primary-foreground"
               >
                 Show {resultCount} lure{resultCount === 1 ? "" : "s"}
               </button>
