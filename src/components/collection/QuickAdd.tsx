@@ -91,7 +91,7 @@ export function QuickAdd({
       open={!!product}
       onOpenChange={(o) => !o && onClose()}
       title={product.name}
-      description={`${product.name} · ${specLine(product).replace(/^[^·]+· [^·]+/, `${product.size}mm · ${v.weight}g`)}`}
+      description={`${product.name} · ${product.size}mm · ${v.weight}g · ${specLine(product).split(" · ").at(-1)}`}
       returnFocus={trigger}
     >
       {product.variants.length > 1 && (
