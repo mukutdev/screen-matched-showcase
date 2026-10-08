@@ -48,6 +48,9 @@
   --color-water: var(--water);
   --color-success: var(--success);
   --color-frame: var(--frame);
+  --color-gallery-surface: var(--gallery-surface);
+  --color-gallery-ink: var(--gallery-ink);
+  --color-media-foreground: var(--media-foreground);
   --font-sans: "Rubik", ui-sans-serif, system-ui, sans-serif;
   --color-ring-offset-background: var(--background);
   --color-chart-1: var(--chart-1);
@@ -85,6 +88,11 @@
   --destructive-foreground: oklch(0.98 0 0);
   --success: oklch(0.73 0.1 155);         /* #6FBF8E */
   --frame: oklch(0.235 0.008 220);        /* #1B2023 */
+  --gallery-surface: oklch(1 0 0);
+  --gallery-ink: oklch(0.2 0 0);
+  --media-foreground: oklch(1 0 0);
+  --catch-overlay: linear-gradient(to top, oklch(0 0 0 / 75%), transparent 32%);
+  --gallery-control-shadow: 0 2px 12px oklch(0 0 0 / 10%);
   --border: oklch(1 0 0 / 8%);
   --input: oklch(1 0 0 / 14%);
   --ring: oklch(0.894 0.03 85);
@@ -134,4 +142,25 @@
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-weight: 500;
+}
+
+.catch-carousel { position: relative; margin-top: 2rem; background: var(--gallery-surface); padding: 8px 36px 32px; }
+.catch-viewport { overflow: hidden; }
+.catch-track { display: flex; align-items: center; touch-action: pan-y pinch-zoom; }
+.catch-slide { flex: 0 0 22%; min-width: 0; }
+.catch-media { position: relative; height: 538px; overflow: hidden; border-radius: 15px; transform: scale(.79); transition: transform 350ms ease; }
+.catch-slide[data-distance="1"] .catch-media { transform: scale(.895); }
+.catch-slide[data-distance="0"] .catch-media { transform: scale(1); }
+.catch-overlay { position: absolute; inset: 0; pointer-events: none; background: var(--catch-overlay); }
+.catch-caption { position: absolute; inset-inline: 12px; bottom: 18px; color: var(--media-foreground); text-align: center; font-size: 14px; font-weight: 500; }
+.catch-arrow { position: absolute; top: calc(50% - 12px); z-index: 10; width: 46px; height: 46px; border-radius: 50%; background: var(--gallery-surface); color: var(--gallery-ink); box-shadow: var(--gallery-control-shadow); }
+.catch-arrow:hover { background: var(--gallery-surface); color: var(--gallery-ink); }
+.catch-arrow-prev { left: 13px; }
+.catch-arrow-next { right: 13px; }
+@media (max-width: 767px) {
+  .catch-carousel { margin-inline: -16px; padding: 8px 0 24px; }
+  .catch-slide { flex-basis: 70%; padding-inline: 6px; }
+  .catch-media { height: 460px; }
+  .catch-arrow-prev { left: 8px; }
+  .catch-arrow-next { right: 8px; }
 }
