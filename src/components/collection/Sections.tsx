@@ -155,7 +155,7 @@ function CatchVideo({ src, index }: { src: string; index: number }) {
   );
 }
 
-function CatchPhoto({ src, caption }: { src: string; caption?: string }) {
+function CatchPhoto({ src, caption }: { src: string; caption?: string | undefined }) {
   const [hidden, setHidden] = useState(false);
   if (hidden) return null;
   return (
