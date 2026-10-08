@@ -21,7 +21,7 @@ export function ProductCard({
   onQuickAdd,
 }: {
   product: Product;
-  preferredColour?: ColourId;
+  preferredColour?: ColourId | undefined;
   onQuickAdd: (p: Product, trigger: HTMLElement) => void;
 }) {
   const initial = preferredColour && p.colours.includes(preferredColour) ? preferredColour : p.colours[0];

@@ -83,7 +83,7 @@ export function QuickAdd({
   }, [product]);
 
   if (!product) return null;
-  const v = product.variants[variant];
+  const v = product.variants[variant] ?? product.variants[0]!;
   const tier = nextTier(cartQty + qty);
 
   return (

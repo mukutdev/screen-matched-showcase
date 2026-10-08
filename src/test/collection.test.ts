@@ -12,7 +12,7 @@ describe("collection rules", () => {
   });
   it("action filter counts: 7 floating masters, 5 sinking", () => {
     expect(apply({ ...DEFAULT_STATE, action: "sinking" })).toHaveLength(5);
-    expect(apply({ ...DEFAULT_STATE, action: "floating" }).filter((p) => p.line === "masters")).toHaveLength(7);
+    expect(apply({ ...DEFAULT_STATE, action: "floating" })).toHaveLength(7);
   });
   it("Bluewater band is 185, 220, 250", () => {
     const sizes = apply({ ...DEFAULT_STATE, water: ["bluewater"], action: "floating" }).map((p) => p.size);

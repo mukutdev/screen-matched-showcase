@@ -15,7 +15,7 @@ export const DEFAULT_STATE: FilterState = { action: "all", water: [], colours: [
 const minPrice = (p: Product) => Math.min(...p.variants.map((v) => v.price));
 
 export function matches(p: Product, s: FilterState): boolean {
-  if (s.action !== "all" && p.action !== s.action) return false;
+  if (s.action !== "all" && (p.line === "gen2" || p.action !== s.action)) return false;
   if (s.water.length && !s.water.includes(bandForSize(p.size))) return false;
   if (s.colours.length) {
     const ok = s.colours.some(
