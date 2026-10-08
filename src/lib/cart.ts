@@ -9,6 +9,8 @@ export interface CartLine {
   spec: string;
   price: number;
   qty: number;
+  variantId: number;
+  image: string;
 }
 
 export function bundlePct(totalQty: number): number {
@@ -32,3 +34,10 @@ export function cartTotals(lines: CartLine[]) {
 }
 
 export const money = (n: number) => `$${n.toFixed(2)}`;
+
+/** Shopify cart permalink: /cart/<variantId>:<qty>,... */
+export function cartPermalink(lines: Pick<CartLine, "variantId" | "qty">[]): string {
+  const qty = new Map<number, number>();
+  lines.forEach((l) => qty.set(l.variantId, (qty.get(l.variantId) ?? 0) + l.qty));
+  return `https://filletandreleaseco.com/cart/${[...qty].map(([v, q]) => `${v}:${q}`).join(",")}`;
+}
