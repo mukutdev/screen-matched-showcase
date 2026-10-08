@@ -169,7 +169,3 @@
   .catch-dots { display: flex; justify-content: center; gap: 8px; margin-top: 16px; }
 }
 @media (prefers-reduced-motion: reduce) { .catch-card { transition: none; } }
-  .catch-media { height: 460px; }
-  .catch-arrow-prev { left: 8px; }
-  .catch-arrow-next { right: 8px; }
-}
