@@ -9,7 +9,7 @@ import { CATEGORIES, INSTAGRAM } from "@/data/home";
 import { STORE } from "@/data/collection";
 import { ALL_STORE_PRODUCTS, type StoreProduct } from "@/lib/store";
 import { money } from "@/lib/cart";
-import logoAsset from "@/assets/far-logo.png.asset.json";
+import logoAsset from "@/assets/far-lockup.png.asset.json";
 
 const SHOP_ALL = STORE + "/collections/shop-all";
 const BEST = STORE + "/collections/best-sellers-1";

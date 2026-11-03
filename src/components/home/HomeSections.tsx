@@ -106,12 +106,13 @@ export function HomeHero({ onShop, onFind }: { onShop: () => void; onFind: () =>
               Shop best sellers
             </Button>
             <Button
+              variant="outline"
               type="button"
               onClick={() => {
                 track("hero_cta_click", { cta: "find_my_lure" });
                 onFind();
               }}
-              className="min-h-12 rounded-full border border-foreground/40 px-6 font-medium transition-colors duration-150 hover:border-foreground"
+              className="min-h-12 rounded-full border border-foreground/40 bg-transparent text-foreground px-6 font-medium transition-colors duration-150 hover:border-foreground"
             >
               Find my lure — 30 sec
             </Button>
@@ -261,7 +262,7 @@ export function LureFinder({ onQuickAdd }: { onQuickAdd: (p: Product, el: HTMLEl
           ))}
         </div></div>
         {step > 0 && (
-          <Button type="button" onClick={() => (step === 3 ? reset() : setStep((s) => s - 1))} className="flex min-h-11 items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground">
+          <Button variant="ghost" type="button" onClick={() => (step === 3 ? reset() : setStep((s) => s - 1))} className="flex min-h-11 items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground">
             <ArrowLeft className="h-4 w-4" /> {step === 3 ? "Start over" : "Back"}
           </Button>
         )}
@@ -272,7 +273,7 @@ export function LureFinder({ onQuickAdd }: { onQuickAdd: (p: Product, el: HTMLEl
           <legend className="text-lg font-semibold md:text-xl">Where are you fishing?</legend>
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {WATER_BANDS.map((b) => (
-              <Button key={b.id} type="button" className={optionCls} onClick={() => pick("water", b.id)}>
+              <Button variant="outline" key={b.id} type="button" className={optionCls} onClick={() => pick("water", b.id)}>
                 {b.id === "estuary" ? <Trees className="mb-2 h-5 w-5 text-primary" /> : b.id === "bluewater" ? <Waves className="mb-2 h-5 w-5 text-primary" /> : <Fish className="mb-2 h-5 w-5 text-primary" />}<span className="font-semibold">{b.label}</span>
                 <span className="text-sm text-muted-foreground">{b.sizes.map((s) => `${s}mm`).join(" · ")}</span>
               </Button>
@@ -286,7 +287,7 @@ export function LureFinder({ onQuickAdd }: { onQuickAdd: (p: Product, el: HTMLEl
           <legend className="text-lg font-semibold md:text-xl">Surface strikes or sub-surface?</legend>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             {ACTION_OPTIONS.map((o) => (
-              <Button key={o.id} type="button" className={optionCls} onClick={() => pick("action", o.id)}>
+              <Button variant="outline" key={o.id} type="button" className={optionCls} onClick={() => pick("action", o.id)}>
                 <span className="font-semibold">{o.label}</span>
                 <span className="text-sm text-muted-foreground">{o.desc}</span>
               </Button>
@@ -300,7 +301,7 @@ export function LureFinder({ onQuickAdd }: { onQuickAdd: (p: Product, el: HTMLEl
           <legend className="text-lg font-semibold md:text-xl">How heavy is your rod?</legend>
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
             {WEIGHT_OPTIONS.map((o) => (
-              <Button key={o.id} type="button" className={optionCls} onClick={() => pick("weight", o.id)}>
+              <Button variant="outline" key={o.id} type="button" className={optionCls} onClick={() => pick("weight", o.id)}>
                 <span className="font-semibold">{o.label}</span>
                 <span className="text-sm text-muted-foreground">{o.desc}</span>
               </Button>
@@ -331,7 +332,7 @@ export function LureFinder({ onQuickAdd }: { onQuickAdd: (p: Product, el: HTMLEl
                 Add to cart
               </Button>
               {result.secondary && (
-                <Button type="button" onClick={(e) => result.secondary && onQuickAdd(result.secondary, e.currentTarget)} className="min-h-12 rounded-full border border-input px-5 text-sm font-medium hover:border-foreground">
+                <Button variant="outline" type="button" onClick={(e) => result.secondary && onQuickAdd(result.secondary, e.currentTarget)} className="min-h-12 rounded-full border border-input px-5 text-sm font-medium hover:border-foreground">
                   Or try the {result.secondary.name}
                 </Button>
               )}
@@ -612,6 +613,7 @@ export function StickyCta({ visible, onFind, onShop }: { visible: boolean; onFin
     >
       <div className="flex gap-2 p-3">
         <Button
+          variant="outline"
           type="button"
           tabIndex={visible ? 0 : -1}
           onClick={() => {

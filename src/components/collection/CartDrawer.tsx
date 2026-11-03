@@ -53,7 +53,7 @@ export function CartDrawer({
               <div className="min-w-0 flex-1 text-sm">
                 <p className="font-bold">{l.name}</p>
                 <p className="text-muted-foreground">
-                  {l.colourName} · {l.spec}
+                  {[l.colourName, l.spec].filter(Boolean).join(" · ")}
                 </p>
                 <p>
                   {l.qty} × {money(l.price)}
