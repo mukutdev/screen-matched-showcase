@@ -200,6 +200,7 @@
 .announcement { position: absolute; top: 0; inset-inline: 0; z-index: 46; height: 36px; display: flex; align-items: center; justify-content: center; background: var(--primary); color: var(--primary-foreground); font-size: 13px; text-align: center; }
 .store-header { position: fixed; top: 36px; inset-inline: 0; z-index: 45; height: 64px; color: var(--foreground); transition: background 150ms, top 150ms; }
 .store-header.is-solid { top: 0; background: var(--background); border-bottom: 1px solid var(--border); }
+.store-header.menu-open { background: var(--background); }
 .header-inner { max-width: 1320px; height: 64px; padding-inline: 24px; margin-inline: auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 .brand-logo { width: 170px; height: 48px; object-fit: contain; }
 .cart-count { position: absolute; right: 1px; top: 1px; min-width: 17px; height: 17px; padding: 0 3px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; background: var(--primary); color: var(--primary-foreground); }
