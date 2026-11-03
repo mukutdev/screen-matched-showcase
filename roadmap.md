@@ -4,3 +4,10 @@
 - [x] Add the $175 free-jig-pack threshold to the cart drawer progress.
 - [x] Wire tracking events and finder localStorage persistence.
 - [x] Verify on desktop and phone; run tests and typecheck.
+- [x] Add home header, navigation, search and footer.
+- [x] Build shared scroll-snap carousels and exclusive live-product rows with variant quick add (seven products in the live Best Sellers collection).
+- [x] Refresh catches, finder and remaining home sections; twelve captioned store catch photos imported.
+- [x] Add quantity controls and the genuine Liquidator rig add-on; public catalog exposes no hooks or rings.
+- [x] Verify mobile/desktop interactions and 24 rule/routing tests.
+- [ ] Expand testimonials to eight authentic reviews and connect Judge.me rating/count — blocked by unavailable public Judge.me records; current verified quote and existing rating retained.
+- [ ] Add catch “Shop it” links — blocked by missing verified catch-to-lure associations; buttons hidden as requested.

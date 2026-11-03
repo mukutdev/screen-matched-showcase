@@ -1,11 +1,13 @@
 // Home page data. Product/collection data stays in collection.ts; this is home-only content.
 import { COLOURS, PRODUCTS, STORE, img, type Product } from "./collection";
+import catchPhotos from "./catch-photos.json";
+import { OPTIMIZED_POSTER } from "@/lib/store";
 
 const CDN = "https://cdn.shopify.com/s/files/1/0590/7657/5306/files/";
 
 export const HOME_HERO = {
   video: STORE + "/cdn/shop/videos/c/vp/c73c9012992f4063ac09787c18cc904a/c73c9012992f4063ac09787c18cc904a.HD-1080p-7.2Mbps-46403998.mp4",
-  poster: STORE + "/cdn/shop/files/preview_images/c73c9012992f4063ac09787c18cc904a.thumbnail.0000000000_1920x.jpg",
+  poster: OPTIMIZED_POSTER,
 };
 
 /** One review figure everywhere on the site (matches the collection page). */
@@ -56,16 +58,10 @@ export const OFFER_LADDER = [
 export interface CatchPhoto {
   src: string;
   species: string;
+  productId?: string;
 }
 
-export const CATCH_PHOTOS: CatchPhoto[] = [
-  { src: CDN + "gt-angler-gear-up.jpg", species: "GT" },
-  { src: CDN + "angler-grouper.jpg", species: "Coral Trout" },
-  { src: CDN + "14782930-5D30-4297-AEF4-A0FF5946ADEB.jpg", species: "Red Emperor" },
-  { src: CDN + "D9163ED4-4E50-42FD-AEF1-39D794A8097E.jpg", species: "Cobia" },
-  { src: CDN + "6BAE7227-4F9A-4F94-89AD-2B159F8CCC7F.jpg", species: "Amberjack" },
-  { src: CDN + "9C2DD1EB-9F26-450E-9176-DA7283FBF91E.jpg", species: "Green Jobfish" },
-];
+export const CATCH_PHOTOS: CatchPhoto[] = catchPhotos;
 
 export const INSTAGRAM = "https://www.instagram.com/filletandreleaseco";
 
@@ -90,7 +86,7 @@ export const WHY_IMG = CDN + "g3_cd3aef85-1b3c-45b3-9006-6cea52043eb2.png";
 
 export const FOUNDER = {
   text: "Veteran owned & operated. FAR was started by Jaison Greer, an Aussie veteran who turned carving lures into a new purpose after six years' service.",
-  href: STORE + "/pages/our-story",
+  href: STORE + "/pages/about-us",
 };
 
 export interface CategoryTile {
@@ -106,7 +102,7 @@ export const CATEGORIES: CategoryTile[] = [
   { name: "Ghost Drops", line: "60–135mm · Originals · Moonlight · Artist Series", href: STORE + "/collections/ghost-drops-signature-stickbaits", photo: CDN + "Ghost_Drops-14.jpg?v=1781257568&width=800" },
   { name: "Liquidator PRO Jigs", line: "75–120g mid/slow pitch", href: STORE + "/collections/jigs", photo: CDN + "Bundles-3_1.jpg?v=1771388242&width=800" },
   { name: "Bundles", line: "Save up to 30%", href: STORE + "/collections/all-bundles", photo: CDN + "mystery_box-2.jpg?v=1771314758&width=800" },
-  { name: "Apparel", line: "Jerseys, lids & coolers", href: STORE + "/collections/apparel", photo: CDN + "1_948d3589-e04b-4f0e-b060-546b32a1f9b8.png?v=1779960235&width=800" },
+  { name: "Apparel", line: "Jerseys, long sleeves, beanies & caps", href: STORE + "/collections/jerseys", photo: CDN + "1_948d3589-e04b-4f0e-b060-546b32a1f9b8.png?v=1779960235&width=800" },
 ];
 
 export const HOME_FAQ: { q: string; a: string; link?: { label: string; href: string } }[] = [

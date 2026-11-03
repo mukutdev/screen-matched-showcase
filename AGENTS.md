@@ -11,6 +11,9 @@
 
 ## Architecture
 - All collection/product data lives in src/data/collection.ts; filter and cart rules are pure functions in src/lib — keeps the prototype portable to Shopify Liquid and testable.
-- `/` is the conversion-first home page (src/components/home/HomeSections.tsx); the Masters collection lives at `/masters`. Home reuses the collection's ProductCard, QuickAdd and CartDrawer so cart behaviour is identical across pages.
+- `/` is the conversion-first home page; the Masters collection lives at `/masters`. Home store merchandise uses normalized live-catalog snapshots and StoreQuickAdd; finder Masters use the existing QuickAdd, with one shared CartDrawer.
 - Analytics events go through src/lib/track.ts (window.dataLayer push) — add new events there, never ad-hoc gtag calls.
 - Use Embla for the centered catch carousel, with active-slide state pausing inactive videos — keeps touch navigation reliable and prevents simultaneous playback.
+- Home product, photo and review rows use Carousel's native scroll-snap track; keep the Masters video coverflow separate because its playback and focus behavior differ.
+- Store merchandise snapshots and collection data are browser-safe static data; never invent stock, reviews or catch-to-product associations when public data is unavailable.
+- Cart lines identify variants and explicitly mark non-Masters merchandise as ineligible for the Masters mix-and-match discount to avoid discounting apparel and pre-bundled products.
