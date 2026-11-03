@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { BEST_SELLER_PRODUCT, HOME_HERO } from "@/data/home";
+import { BEST_SELLER_EXTERNAL, BEST_SELLER_PRODUCT, HOME_HERO } from "@/data/home";
 import type { Product } from "@/data/collection";
 import type { CartLine } from "@/lib/cart";
 import { track } from "@/lib/track";

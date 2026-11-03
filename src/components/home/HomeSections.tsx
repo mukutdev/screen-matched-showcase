@@ -45,13 +45,14 @@ export function HomeHero({ onShop, onFind }: { onShop: () => void; onFind: () =>
 
   // Poster shows instantly; the video only loads once the page is interactive.
   useEffect(() => {
-    if (reducedMotion()) return;
+    if (reducedMotion()) return undefined;
     const onLoad = () => setShowVideo(true);
-    if (document.readyState === "complete") onLoad();
-    else {
-      window.addEventListener("load", onLoad);
-      return () => window.removeEventListener("load", onLoad);
+    if (document.readyState === "complete") {
+      onLoad();
+      return undefined;
     }
+    window.addEventListener("load", onLoad);
+    return () => window.removeEventListener("load", onLoad);
   }, []);
 
   const toggle = () => {
