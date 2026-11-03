@@ -1,4 +1,4 @@
-import { BUNDLE_TIERS, FREE_SHIPPING_THRESHOLD, type ColourId } from "@/data/collection";
+import { BUNDLE_TIERS, FREE_GIFT_THRESHOLD, FREE_SHIPPING_THRESHOLD, type ColourId } from "@/data/collection";
 
 export interface CartLine {
   key: string;
@@ -30,7 +30,8 @@ export function cartTotals(lines: CartLine[]) {
   const discount = Math.round(gross * pct) / 100;
   const subtotal = Math.round((gross - discount) * 100) / 100;
   const toFree = Math.max(0, Math.round((FREE_SHIPPING_THRESHOLD - subtotal) * 100) / 100);
-  return { qty, gross, pct, discount, subtotal, toFree };
+  const toGift = Math.max(0, Math.round((FREE_GIFT_THRESHOLD - subtotal) * 100) / 100);
+  return { qty, gross, pct, discount, subtotal, toFree, toGift };
 }
 
 export const money = (n: number) => `$${n.toFixed(2)}`;

@@ -11,4 +11,6 @@
 
 ## Architecture
 - All collection/product data lives in src/data/collection.ts; filter and cart rules are pure functions in src/lib — keeps the prototype portable to Shopify Liquid and testable.
+- `/` is the conversion-first home page (src/components/home/HomeSections.tsx); the Masters collection lives at `/masters`. Home reuses the collection's ProductCard, QuickAdd and CartDrawer so cart behaviour is identical across pages.
+- Analytics events go through src/lib/track.ts (window.dataLayer push) — add new events there, never ad-hoc gtag calls.
 - Use Embla for the centered catch carousel, with active-slide state pausing inactive videos — keeps touch navigation reliable and prevents simultaneous playback.
