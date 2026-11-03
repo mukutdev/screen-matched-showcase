@@ -4,7 +4,7 @@ import type { CartLine } from "@/lib/cart";
 
 export interface StoreVariant { id: number; title: string; price: number; available: boolean; options: string[]; compareAt: number }
 export interface StoreProduct { id: string; name: string; price: number; image: string; url: string; category: string; spec: string; options: { name: string; values: string[] }[]; variants: StoreVariant[] }
-export const STORE_ROWS: Record<"best" | "ghost" | "bundles" | "apparel" | "addons", StoreProduct[]> = snapshot;
+export const STORE_ROWS: Record<"best" | "ghost" | "bundles" | "apparel" | "addons", StoreProduct[]> = { best: snapshot.best, ghost: snapshot.ghost, bundles: snapshot.bundles, apparel: snapshot.apparel, addons: snapshot.addons };
 export const ALL_STORE_PRODUCTS = Object.values(STORE_ROWS).flat().filter((p, i, all) => all.findIndex((x) => x.id === p.id) === i);
 export const COLLECTION_COUNTS = snapshot.collectionCounts;
 export const OPTIMIZED_POSTER = snapshot.poster;
