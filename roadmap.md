@@ -1,4 +1,6 @@
 # Tasks
-- [x] Match the new reference with stepped carousel heights, a white surround, and edge arrows.
-- [x] Redesign the batch notification signup.
-- [x] Verify gallery navigation and signup presentation on desktop and phone.
+- [ ] Move the Masters collection page from `/` to `/masters`.
+- [ ] Build the v3 home page at `/` (hero, best sellers, offer ladder, lure finder, catches, reviews, why FAR, founder, categories, FAQ, email band, sticky mobile CTA).
+- [ ] Add the $175 free-jig-pack threshold to the cart drawer progress.
+- [ ] Wire tracking events and finder localStorage persistence.
+- [ ] Verify on desktop and phone; run tests and typecheck.
