@@ -112,7 +112,7 @@ export function HomeHero({ onShop, onFind }: { onShop: () => void; onFind: () =>
                 track("hero_cta_click", { cta: "find_my_lure" });
                 onFind();
               }}
-              className="min-h-12 rounded-full border border-foreground/40 bg-transparent text-foreground px-6 font-medium transition-colors duration-150 hover:border-foreground"
+              className="min-h-12 rounded-full border border-foreground/40 bg-transparent text-foreground px-4 text-sm font-medium md:px-6 md:text-base transition-colors duration-150 hover:border-foreground"
             >
               Find my lure — 30 sec
             </Button>
@@ -131,7 +131,7 @@ export function HomeHero({ onShop, onFind }: { onShop: () => void; onFind: () =>
           type="button"
           onClick={toggle}
           aria-label={playing ? "Pause background video" : "Play background video"}
-          className="absolute right-4 top-28 flex h-11 w-11 items-center justify-center rounded-full border border-foreground/30 bg-background/50 backdrop-blur md:right-6"
+          className="absolute bottom-4 right-4 flex h-11 w-11 items-center justify-center rounded-full border border-foreground/30 bg-background/50 backdrop-blur md:right-6"
         >
           {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
         </Button>

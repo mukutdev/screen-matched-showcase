@@ -48,7 +48,7 @@ export function StoreHeader({ qty, onCart, onFind, onBest, onOverlayChange, onQu
   const results = query.trim() ? ALL_STORE_PRODUCTS.filter((p) => `${p.name} ${p.spec}`.toLowerCase().includes(query.toLowerCase())).slice(0, 8) : [];
   return <>
     <div className="announcement" onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}><a href={SHOP_ALL}>{message === 0 ? "Free shipping on orders over $129" : "Spend $175, get a free $50 jig pack"}</a></div>
-    <header className={`store-header ${solid || mega ? "is-solid" : ""}`}>
+    <header className={`store-header ${solid ? "is-solid" : ""} ${mega ? "menu-open" : ""}`}>
       <div className="header-inner">
         <Button variant="ghost" size="icon" className="h-11 w-11 lg:hidden" aria-label="Open menu" onClick={() => setMobile(true)}><Menu /></Button>
         <Logo />
