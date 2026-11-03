@@ -4,3 +4,8 @@
 - [x] Add the $175 free-jig-pack threshold to the cart drawer progress.
 - [x] Wire tracking events and finder localStorage persistence.
 - [x] Verify on desktop and phone; run tests and typecheck.
+- [ ] Add home header, navigation, search and footer.
+- [ ] Build shared scroll-snap carousels and exclusive live-product rows with variant quick add.
+- [ ] Refresh catches, testimonials, finder and remaining home sections to round-two brief.
+- [ ] Add quantity controls and real rig add-ons to cart.
+- [ ] Verify mobile/desktop interactions and rule tests; document unavailable live content.
