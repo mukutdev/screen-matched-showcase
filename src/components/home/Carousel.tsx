@@ -3,7 +3,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function Carousel({ label, title, subhead, href, linkLabel = "Shop all →", kind = "products", children }: {
-  label: string; title?: string; subhead?: string; href?: string; linkLabel?: string;
+  label: string; title?: string; subhead?: string | undefined; href?: string; linkLabel?: string;
   kind?: "products" | "catches" | "reviews"; children: ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
