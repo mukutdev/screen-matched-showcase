@@ -11,6 +11,8 @@ export interface CartLine {
   qty: number;
   variantId: number;
   image: string;
+  /** Only the Masters mix-and-match range participates in the existing bundle ladder. */
+  bundleEligible?: boolean;
 }
 
 export function bundlePct(totalQty: number): number {
@@ -26,12 +28,15 @@ export function nextTier(totalQty: number) {
 export function cartTotals(lines: CartLine[]) {
   const qty = lines.reduce((s, l) => s + l.qty, 0);
   const gross = lines.reduce((s, l) => s + l.price * l.qty, 0);
-  const pct = bundlePct(qty);
-  const discount = Math.round(gross * pct) / 100;
+  const eligible = lines.filter((line) => line.bundleEligible !== false);
+  const eligibleQty = eligible.reduce((s, l) => s + l.qty, 0);
+  const eligibleGross = eligible.reduce((s, l) => s + l.price * l.qty, 0);
+  const pct = bundlePct(eligibleQty);
+  const discount = Math.round(eligibleGross * pct) / 100;
   const subtotal = Math.round((gross - discount) * 100) / 100;
   const toFree = Math.max(0, Math.round((FREE_SHIPPING_THRESHOLD - subtotal) * 100) / 100);
   const toGift = Math.max(0, Math.round((FREE_GIFT_THRESHOLD - subtotal) * 100) / 100);
-  return { qty, gross, pct, discount, subtotal, toFree, toGift };
+  return { qty, eligibleQty, gross, pct, discount, subtotal, toFree, toGift };
 }
 
 export const money = (n: number) => `$${n.toFixed(2)}`;
