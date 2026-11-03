@@ -1,5 +1,5 @@
 import { Sheet, SheetContent, SheetTitle, SheetDescription } from "@/components/ui/sheet";
-import { FREE_SHIPPING_THRESHOLD } from "@/data/collection";
+import { FREE_GIFT_THRESHOLD, FREE_SHIPPING_THRESHOLD } from "@/data/collection";
 import { cartPermalink, cartTotals, money, nextTier, type CartLine } from "@/lib/cart";
 
 export function CartDrawer({
@@ -15,17 +15,26 @@ export function CartDrawer({
 }) {
   const t = cartTotals(lines);
   const tier = nextTier(t.qty);
-  const pct = Math.min(100, ((FREE_SHIPPING_THRESHOLD - t.toFree) / FREE_SHIPPING_THRESHOLD) * 100);
+  // Two-step ladder: free shipping at $129, then a free $50 jig pack at $175.
+  const milestone =
+    t.toFree > 0
+      ? { label: `${money(t.toFree)} away from free shipping`, pct: (t.subtotal / FREE_SHIPPING_THRESHOLD) * 100, aria: "Free shipping progress" }
+      : t.toGift > 0
+        ? {
+            label: `${money(t.toGift)} away from a free $50 jig pack`,
+            pct: ((t.subtotal - FREE_SHIPPING_THRESHOLD) / (FREE_GIFT_THRESHOLD - FREE_SHIPPING_THRESHOLD)) * 100,
+            aria: "Free jig pack progress",
+          }
+        : { label: "Free shipping + free $50 jig pack unlocked", pct: 100, aria: "All rewards unlocked" };
+  const pct = Math.min(100, Math.max(0, milestone.pct));
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="flex w-full flex-col bg-background sm:max-w-md">
         <SheetTitle className="text-xl font-bold">Your cart ({t.qty})</SheetTitle>
         <SheetDescription className="sr-only">Cart contents and totals</SheetDescription>
         <div>
-          <p className="text-sm">
-            {t.toFree > 0 ? `${money(t.toFree)} away from free shipping` : "You've unlocked free shipping"}
-          </p>
-          <div className="mt-2 h-2 overflow-hidden rounded-full bg-muted" role="progressbar" aria-valuenow={Math.round(pct)} aria-valuemin={0} aria-valuemax={100} aria-label="Free shipping progress">
+          <p className="text-sm">{milestone.label}</p>
+          <div className="mt-2 h-2 overflow-hidden rounded-full bg-muted" role="progressbar" aria-valuenow={Math.round(pct)} aria-valuemin={0} aria-valuemax={100} aria-label={milestone.aria}>
             <div className="h-full bg-primary" style={{ width: `${pct}%` }} />
           </div>
         </div>

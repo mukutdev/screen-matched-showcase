@@ -214,6 +214,7 @@ export const BUNDLE_TIERS = [
 ];
 
 export const FREE_SHIPPING_THRESHOLD = 129;
+export const FREE_GIFT_THRESHOLD = 175;
 
 export const RIGGING_GUIDE = STORE + "/pages/rigging-guide-new";
 
