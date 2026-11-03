@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { ArrowLeft, ArrowUpRight, Check, Gift, Layers, Mail, Pause, Play, ShieldCheck, Star, Truck } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Check, Gift, Layers, Mail, Pause, Play, ShieldCheck, Star, Truck, Fish, Trees, Waves, X } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,6 +24,8 @@ import { DEFAULT_STATE, toSearch } from "@/lib/filters";
 import { loadAnswers, recommend, saveAnswers, type FinderAnswers, type WeightBand } from "@/lib/finder";
 import { track } from "@/lib/track";
 import { SafeImg } from "@/components/collection/Media";
+import founderAsset from "@/assets/jaison-greer.webp.asset.json";
+import { COLLECTION_COUNTS } from "@/lib/store";
 import { priceLabel, specLine } from "@/components/collection/ProductCard";
 
 const reducedMotion = () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -63,7 +65,7 @@ export function HomeHero({ onShop, onFind }: { onShop: () => void; onFind: () =>
   };
 
   return (
-    <section className="relative flex h-[62vh] max-h-[560px] min-h-[460px] flex-col justify-end overflow-hidden md:h-[70vh] md:max-h-[720px] md:min-h-[540px]">
+    <section className="relative flex h-[62vh] max-h-[560px] min-h-[390px] flex-col justify-end overflow-hidden md:h-[70vh] md:max-h-[720px] md:min-h-[540px]">
       <img src={HOME_HERO.poster} alt="" className="absolute inset-0 h-full w-full object-cover" fetchPriority="high" />
       {showVideo && (
         <video
@@ -86,14 +88,14 @@ export function HomeHero({ onShop, onFind }: { onShop: () => void; onFind: () =>
       <div className="relative mx-auto w-full max-w-[1320px] px-4 pb-8 md:px-6 md:pb-12">
         <div className="max-w-[640px]">
           <p className="eyebrow text-primary">Fuel the passion</p>
-          <h1 className="mt-2 text-[34px] font-bold leading-[1.05] tracking-[-0.02em] md:text-[56px]">
-            Handcrafted timber stickbaits, built to be fished hard.
+          <h1 className="mt-2 text-[34px] font-bold leading-[1.05] tracking-normal md:text-[56px]">
+            Handcrafted timber stickbaits
           </h1>
           <p className="mt-3 text-base text-foreground/85">
             Hand-shaped, hand-painted, stainless through-wire. Veteran-owned and tested on Australian water.
           </p>
           <div className="mt-5 flex flex-wrap gap-3">
-            <button
+            <Button
               type="button"
               onClick={() => {
                 track("hero_cta_click", { cta: "shop_best_sellers" });
@@ -102,8 +104,8 @@ export function HomeHero({ onShop, onFind }: { onShop: () => void; onFind: () =>
               className="min-h-12 rounded-full bg-primary px-6 font-medium text-primary-foreground transition-colors duration-150 hover:bg-primary/90"
             >
               Shop best sellers
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
               onClick={() => {
                 track("hero_cta_click", { cta: "find_my_lure" });
@@ -112,23 +114,26 @@ export function HomeHero({ onShop, onFind }: { onShop: () => void; onFind: () =>
               className="min-h-12 rounded-full border border-foreground/40 px-6 font-medium transition-colors duration-150 hover:border-foreground"
             >
               Find my lure — 30 sec
-            </button>
+            </Button>
           </div>
-          <p className="mt-4 text-[13px] text-foreground/80">
-            <span className="text-primary">★ {RATING.score}</span> · {RATING.count} verified reviews · Free shipping over $129 · 30-day money-back
-          </p>
+          <div className="hero-proof mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm text-foreground/85">
+            <span className="flex items-center gap-2"><Star className="h-4 w-4 text-primary" /> {RATING.score} · {RATING.count} verified reviews</span>
+            <span className="flex items-center gap-2"><Truck className="h-4 w-4" /> Free shipping over $129</span>
+            <span className="flex items-center gap-2"><ShieldCheck className="h-4 w-4" /> 30-day money-back</span>
+          </div>
+          <span aria-hidden className="mt-5 block h-6 w-px bg-primary" />
         </div>
       </div>
 
       {showVideo && (
-        <button
+        <Button
           type="button"
           onClick={toggle}
           aria-label={playing ? "Pause background video" : "Play background video"}
-          className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full border border-foreground/30 bg-background/50 backdrop-blur md:right-6"
+          className="absolute right-4 top-28 flex h-11 w-11 items-center justify-center rounded-full border border-foreground/30 bg-background/50 backdrop-blur md:right-6"
         >
           {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-        </button>
+        </Button>
       )}
     </section>
   );
@@ -179,11 +184,11 @@ export function OfferLadder() {
     <section className="bg-primary text-primary-foreground" aria-label="Current offers">
       <div className="mx-auto flex max-w-[1320px] flex-wrap items-center justify-center gap-x-8 gap-y-3 px-4 py-4 md:justify-between md:px-6">
         <ul className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
-          {OFFER_LADDER.map((s) => {
+          {OFFER_LADDER.map((s, i) => {
             const Icon = LADDER_ICONS[s.icon];
             return (
-              <li key={s.label} className="flex items-center gap-2 text-sm font-medium">
-                <Icon className="h-4 w-4 shrink-0" />
+              <li key={s.label} className="offer-step flex items-center gap-3 text-[15px] font-semibold">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-primary-foreground/30">{i + 1}</span>
                 {s.label}
               </li>
             );
@@ -245,76 +250,77 @@ export function LureFinder({ onQuickAdd }: { onQuickAdd: (p: Product, el: HTMLEl
   const result = step === 3 && answers.water && answers.action && answers.weight ? recommend(answers as FinderAnswers) : null;
 
   const optionCls =
-    "flex min-h-14 w-full flex-col items-start gap-0.5 rounded-xl border border-input bg-background p-4 text-left transition-colors duration-150 hover:border-primary focus-visible:border-primary";
+    "flex min-h-24 h-auto w-full flex-col items-start gap-1 whitespace-normal rounded-lg border border-input bg-background p-4 text-left transition-colors duration-150 hover:border-primary focus-visible:border-primary";
 
   return (
-    <div className="rounded-2xl border border-border bg-card p-5 md:p-10">
+    <div className="finder-experience">
       <div className="flex items-center justify-between gap-4">
-        <div className="flex gap-1.5" aria-hidden>
-          {[0, 1, 2, 3].map((i) => (
+        <div><p className="mb-2 text-sm font-medium">{step < 3 ? `Step ${step + 1} of 3` : "Your match"}</p><div className="flex gap-1.5" aria-hidden>
+          {[0, 1, 2].map((i) => (
             <span key={i} className={`h-1.5 w-6 rounded-full ${i <= step ? "bg-primary" : "bg-muted"}`} />
           ))}
-        </div>
+        </div></div>
         {step > 0 && (
-          <button type="button" onClick={() => (step === 3 ? reset() : setStep((s) => s - 1))} className="flex min-h-11 items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground">
+          <Button type="button" onClick={() => (step === 3 ? reset() : setStep((s) => s - 1))} className="flex min-h-11 items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground">
             <ArrowLeft className="h-4 w-4" /> {step === 3 ? "Start over" : "Back"}
-          </button>
+          </Button>
         )}
       </div>
 
       {step === 0 && (
-        <fieldset className="mt-6">
+        <fieldset className="finder-step mt-6" key={step}>
           <legend className="text-lg font-semibold md:text-xl">Where are you fishing?</legend>
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {WATER_BANDS.map((b) => (
-              <button key={b.id} type="button" className={optionCls} onClick={() => pick("water", b.id)}>
-                <span className="font-semibold">{b.label}</span>
+              <Button key={b.id} type="button" className={optionCls} onClick={() => pick("water", b.id)}>
+                {b.id === "estuary" ? <Trees className="mb-2 h-5 w-5 text-primary" /> : b.id === "bluewater" ? <Waves className="mb-2 h-5 w-5 text-primary" /> : <Fish className="mb-2 h-5 w-5 text-primary" />}<span className="font-semibold">{b.label}</span>
                 <span className="text-sm text-muted-foreground">{b.sizes.map((s) => `${s}mm`).join(" · ")}</span>
-              </button>
+              </Button>
             ))}
           </div>
         </fieldset>
       )}
 
       {step === 1 && (
-        <fieldset className="mt-6">
+        <fieldset className="finder-step mt-6" key={step}>
           <legend className="text-lg font-semibold md:text-xl">Surface strikes or sub-surface?</legend>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             {ACTION_OPTIONS.map((o) => (
-              <button key={o.id} type="button" className={optionCls} onClick={() => pick("action", o.id)}>
+              <Button key={o.id} type="button" className={optionCls} onClick={() => pick("action", o.id)}>
                 <span className="font-semibold">{o.label}</span>
                 <span className="text-sm text-muted-foreground">{o.desc}</span>
-              </button>
+              </Button>
             ))}
           </div>
         </fieldset>
       )}
 
       {step === 2 && (
-        <fieldset className="mt-6">
+        <fieldset className="finder-step mt-6" key={step}>
           <legend className="text-lg font-semibold md:text-xl">How heavy is your rod?</legend>
           <div className="mt-4 grid gap-3 sm:grid-cols-3">
             {WEIGHT_OPTIONS.map((o) => (
-              <button key={o.id} type="button" className={optionCls} onClick={() => pick("weight", o.id)}>
+              <Button key={o.id} type="button" className={optionCls} onClick={() => pick("weight", o.id)}>
                 <span className="font-semibold">{o.label}</span>
                 <span className="text-sm text-muted-foreground">{o.desc}</span>
-              </button>
+              </Button>
             ))}
           </div>
         </fieldset>
       )}
 
+      <Button asChild variant="link" className="mt-4 px-0 text-sm"><a href="/masters">Skip — show me all stickbaits →</a></Button>
       {result && (
         <div className="mt-6 grid items-center gap-6 md:grid-cols-[220px_1fr]">
           <div className="aspect-square overflow-hidden rounded-xl bg-frame">
-            <img src={img(photoFor(result.pick, defaultColour(result.pick)), 600)} alt={result.pick.name} className="h-full w-full object-contain p-[8%]" />
+            <img src={img(photoFor(result.pick, defaultColour(result.pick)), 600)} alt={result.pick.name} className="h-full w-full object-cover" />
           </div>
           <div>
             <p className="eyebrow text-primary">Your match</p>
             <p className="mt-2 text-xl font-semibold leading-snug">{result.why}</p>
             <p className="mt-1 text-base font-semibold">{priceLabel(result.pick)}</p>
             <div className="mt-4 flex flex-wrap items-center gap-3">
-              <button
+              <Button
                 type="button"
                 onClick={(e) => {
                   track("finder_add_to_cart", { product: result.pick.id });
@@ -323,18 +329,18 @@ export function LureFinder({ onQuickAdd }: { onQuickAdd: (p: Product, el: HTMLEl
                 className="min-h-12 rounded-full bg-primary px-6 font-medium text-primary-foreground hover:bg-primary/90"
               >
                 Add to cart
-              </button>
+              </Button>
               {result.secondary && (
-                <button type="button" onClick={(e) => onQuickAdd(result.secondary!, e.currentTarget)} className="min-h-12 rounded-full border border-input px-5 text-sm font-medium hover:border-foreground">
+                <Button type="button" onClick={(e) => result.secondary && onQuickAdd(result.secondary, e.currentTarget)} className="min-h-12 rounded-full border border-input px-5 text-sm font-medium hover:border-foreground">
                   Or try the {result.secondary.name}
-                </button>
+                </Button>
               )}
             </div>
             <a
-              href={`/masters${toSearch({ ...DEFAULT_STATE, water: [answers.water!], action: answers.action! })}`}
+              href={`/masters${toSearch({ ...DEFAULT_STATE, water: answers.water ? [answers.water] : [], action: answers.action ?? "all" })}`}
               className="mt-4 inline-flex min-h-11 items-center gap-1 text-sm font-medium text-primary underline-offset-4 hover:underline"
             >
-              See all {WATER_BANDS.find((b) => b.id === answers.water)!.label.toLowerCase()} lures <ArrowUpRight className="h-4 w-4" />
+              See all {WATER_BANDS.find((b) => b.id === answers.water)?.label.toLowerCase()} lures <ArrowUpRight className="h-4 w-4" />
             </a>
           </div>
         </div>
@@ -399,7 +405,7 @@ export function Reviews({ onQuickAdd }: { onQuickAdd: (p: Product, el: HTMLEleme
                   <p className="text-muted-foreground">{specLine(p)}</p>
                   <p className="font-semibold">{priceLabel(p)}</p>
                 </div>
-                <button
+                <Button
                   type="button"
                   aria-label={`Quick add ${p.name}`}
                   onClick={(e) => {
@@ -409,7 +415,7 @@ export function Reviews({ onQuickAdd }: { onQuickAdd: (p: Product, el: HTMLEleme
                   className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground transition-transform duration-150 hover:scale-105"
                 >
                   +
-                </button>
+                </Button>
               </div>
             </blockquote>
           );
@@ -424,23 +430,23 @@ export function Reviews({ onQuickAdd }: { onQuickAdd: (p: Product, el: HTMLEleme
 export function WhyFar() {
   return (
     <div className="grid items-center gap-8 md:grid-cols-2 md:gap-16">
-      <div className="aspect-square overflow-hidden rounded-2xl bg-frame">
-        <SafeImg src={WHY_IMG} alt="Masters stickbait close-up" loading="lazy" className="h-full w-full object-contain p-[8%]" />
+      <div className="aspect-square overflow-hidden">
+        <SafeImg src={WHY_IMG} alt="Masters stickbait close-up" loading="lazy" className="h-full w-full object-cover" />
       </div>
       <div>
-        <h2 className="text-[26px] font-semibold leading-tight tracking-[-0.01em] md:text-[32px]">Why anglers switch to timber</h2>
+        <h2 className="text-[26px] font-semibold leading-tight tracking-normal md:text-[32px]">Why anglers switch to timber</h2>
         <dl className="mt-6 divide-y divide-border border-y border-border">
           {[
             ["Body", "Hand-shaped timber", "Moulded ABS"],
             ["Hook hold", "Stainless through-wire", "Screw eyes"],
             ["Finish", "Hand-painted, one at a time", "Printed"],
           ].map(([k, a, b]) => (
-            <div key={k} className="grid grid-cols-[1fr_1.4fr_1fr] items-center gap-3 py-3.5 text-sm md:text-base">
+            <div key={k} className="grid grid-cols-[1fr_1.4fr_1fr] items-center gap-3 py-3.5 text-[15px]">
               <dt className="text-muted-foreground">{k}</dt>
               <dd className="flex items-start gap-2 font-medium">
                 <Check className="mt-1 h-4 w-4 shrink-0 text-primary" /> {a}
               </dd>
-              <dd className="text-muted-foreground">{b}</dd>
+              <dd className="flex gap-2 text-muted-foreground"><X className="mt-1 h-4 w-4 shrink-0" />{b}</dd>
             </div>
           ))}
         </dl>
@@ -459,13 +465,11 @@ export function WhyFar() {
 
 export function Founder() {
   return (
-    <div className="flex flex-col items-start gap-5 rounded-2xl border border-border bg-card p-6 sm:flex-row sm:items-center md:p-8">
-      <span aria-hidden className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-primary text-xl font-bold text-primary-foreground">
-        JG
-      </span>
+    <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center">
+      <img src={founderAsset.url} alt="Jaison Greer, FAR founder" loading="lazy" className="h-40 w-32 shrink-0 rounded-lg object-cover" />
       <div className="flex-1">
         <p className="eyebrow text-primary">Veteran owned &amp; operated</p>
-        <p className="mt-2 max-w-2xl text-foreground/85">{FOUNDER.text}</p>
+        <p className="mt-2 max-w-2xl text-foreground/85">{FOUNDER.text}</p><p className="mt-3 font-medium text-primary">Give back to Aussie veterans. Protect our waterways.</p>
       </div>
       <a href={FOUNDER.href} className="inline-flex min-h-11 shrink-0 items-center gap-1 text-sm font-medium text-primary underline-offset-4 hover:underline">
         Read our story <ArrowUpRight className="h-4 w-4" />
@@ -478,7 +482,7 @@ export function Founder() {
 
 export function CategoryTiles() {
   return (
-    <div className="mt-6 flex gap-3 overflow-x-auto no-scrollbar md:grid md:grid-cols-5 md:gap-6 md:overflow-visible">
+    <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-5 md:gap-6">
       {CATEGORIES.map((c) => {
         const inner = (
           <>
@@ -487,11 +491,11 @@ export function CategoryTiles() {
             </span>
             <span className="block p-4">
               <span className="block font-semibold">{c.name}</span>
-              <span className="mt-0.5 block text-sm text-muted-foreground">{c.line}</span>
+              <span className="mt-0.5 block text-sm text-muted-foreground">{c.line}</span><span className="mt-2 block text-[13px] text-primary">{c.name === "Masters Stickbaits" ? COLLECTION_COUNTS["new-stick-bait-masters"] : c.name === "Ghost Drops" ? COLLECTION_COUNTS["ghost-drops-signature-stickbaits"] : c.name === "Liquidator PRO Jigs" ? COLLECTION_COUNTS.jigs : c.name === "Bundles" ? COLLECTION_COUNTS["all-bundles"] : COLLECTION_COUNTS.jerseys} products</span>
             </span>
           </>
         );
-        const cls = "group block w-[240px] shrink-0 overflow-hidden rounded-xl border border-border bg-card md:w-auto";
+        const cls = "group block overflow-hidden rounded-lg border border-border bg-card last:col-span-2 md:last:col-span-1";
         return c.internal ? (
           <Link key={c.name} to={c.href as "/masters"} className={cls}>
             {inner}
@@ -521,7 +525,7 @@ export function HomeFaq() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <Accordion type="single" collapsible>
+      <Accordion type="single" collapsible defaultValue="q0">
         {HOME_FAQ.map((f, i) => (
           <AccordionItem key={i} value={`q${i}`} className="border-border">
             <AccordionTrigger className="min-h-14 text-left text-base font-medium hover:no-underline">{f.q}</AccordionTrigger>
@@ -539,7 +543,7 @@ export function HomeFaq() {
             </AccordionContent>
           </AccordionItem>
         ))}
-      </Accordion>
+      </Accordion><Button asChild variant="link" className="mt-4 px-0"><a href={STORE + "/pages/contact-us"}>Still unsure? Contact us →</a></Button>
     </>
   );
 }
@@ -549,7 +553,7 @@ export function HomeFaq() {
 export function EmailBand() {
   const [joined, setJoined] = useState(false);
   return (
-    <section className="mt-24 border-y border-border bg-card" aria-labelledby="em">
+    <section className="mt-16 border-y md:mt-24 border-border bg-card" aria-labelledby="em">
       <div className="mx-auto grid max-w-[1320px] items-center gap-10 px-4 py-14 md:grid-cols-[1.1fr_1fr] md:gap-16 md:px-6 md:py-20">
         <div>
           <div className="mb-5 flex items-center gap-3 text-primary">
@@ -607,7 +611,7 @@ export function StickyCta({ visible, onFind, onShop }: { visible: boolean; onFin
       aria-hidden={!visible}
     >
       <div className="flex gap-2 p-3">
-        <button
+        <Button
           type="button"
           tabIndex={visible ? 0 : -1}
           onClick={() => {
@@ -617,8 +621,8 @@ export function StickyCta({ visible, onFind, onShop }: { visible: boolean; onFin
           className="min-h-12 flex-1 rounded-full border border-input text-sm font-medium"
         >
           Find my lure
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
           tabIndex={visible ? 0 : -1}
           onClick={() => {
@@ -628,7 +632,7 @@ export function StickyCta({ visible, onFind, onShop }: { visible: boolean; onFin
           className="min-h-12 flex-1 rounded-full bg-primary text-sm font-semibold text-primary-foreground"
         >
           Shop best sellers
-        </button>
+        </Button>
       </div>
     </div>
   );
