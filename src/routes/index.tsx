@@ -1,167 +1,83 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { BEST_SELLER_EXTERNAL, BEST_SELLER_PRODUCT, HOME_HERO } from "@/data/home";
+import { HOME_HERO } from "@/data/home";
 import type { Product } from "@/data/collection";
 import type { CartLine } from "@/lib/cart";
+import { canAddDirect, STORE_ROWS, storeLine, type StoreProduct } from "@/lib/store";
 import { track } from "@/lib/track";
-import { ProductCard } from "@/components/collection/ProductCard";
 import { QuickAdd } from "@/components/collection/QuickAdd";
 import { CartDrawer } from "@/components/collection/CartDrawer";
-import {
-  CatchGrid,
-  CategoryTiles,
-  EmailBand,
-  ExternalCard,
-  Founder,
-  HomeFaq,
-  HomeHero,
-  LureFinder,
-  OfferLadder,
-  Reviews,
-  StickyCta,
-  WhyFar,
-} from "@/components/home/HomeSections";
+import { Carousel } from "@/components/home/Carousel";
+import { StoreProductCard, StoreQuickAdd } from "@/components/home/StoreProductCard";
+import { StoreHeader, StoreFooter } from "@/components/home/StoreChrome";
+import { HomeCatches, HomeReviews } from "@/components/home/HomeMedia";
+import { CategoryTiles, EmailBand, Founder, HomeFaq, HomeHero, LureFinder, OfferLadder, StickyCta, WhyFar } from "@/components/home/HomeSections";
 
 const TITLE = "Handcrafted Timber Fishing Lures | Fillet & Release Co. (FAR)";
-const DESC = "Handmade timber fishing lures from Australia.";
-
-export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: TITLE },
-      { name: "description", content: DESC },
-      { property: "og:title", content: TITLE },
-      { property: "og:description", content: DESC },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { property: "og:image", content: HOME_HERO.poster },
-      { name: "twitter:image", content: HOME_HERO.poster },
-    ],
-  }),
-  component: HomePage,
-});
-
-const h2 = "text-[26px] font-semibold leading-tight tracking-[-0.01em] md:text-[32px]";
+const DESC = "Shop handcrafted timber stickbaits, Ghost Drops, jigging bundles and fishing apparel. Veteran owned and tested on Australian water.";
+export const Route = createFileRoute("/")({ head: () => ({ meta: [
+  { title: TITLE }, { name: "description", content: DESC }, { property: "og:title", content: TITLE }, { property: "og:description", content: DESC }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" },
+] }), component: HomePage });
 
 function HomePage() {
-  // cart
   const [lines, setLines] = useState<CartLine[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
+  const [overlayOpen, setOverlayOpen] = useState(false);
   const [quick, setQuick] = useState<{ p: Product; el: HTMLElement } | null>(null);
+  const [storeQuick, setStoreQuick] = useState<{ p: StoreProduct; el: HTMLElement } | null>(null);
+  const [added, setAdded] = useState<string | null>(null);
   const cartQty = lines.reduce((n, l) => n + l.qty, 0);
-  const addLine = (l: Omit<CartLine, "key">) => {
-    const key = `${l.productId}-${l.colour}-${l.spec}`;
-    setLines((prev) => {
-      const ex = prev.find((x) => x.key === key);
-      return ex ? prev.map((x) => (x.key === key ? { ...x, qty: x.qty + l.qty } : x)) : [...prev, { ...l, key }];
-    });
-    setQuick(null);
+  const addLine = (line: Omit<CartLine, "key">) => {
+    const key = String(line.variantId);
+    setLines((prev) => prev.some((l) => l.key === key) ? prev.map((l) => l.key === key ? { ...l, qty: l.qty + line.qty } : l) : [...prev, { ...line, key }]);
+    setQuick(null); setStoreQuick(null);
     setTimeout(() => setCartOpen(true), 150);
   };
   const openQuick = (p: Product, el: HTMLElement) => setQuick({ p, el });
-
-  // section targets + sticky mobile CTA visibility
+  const openStoreQuick = (p: StoreProduct, el: HTMLElement) => {
+    track("bestseller_quick_add", { product: p.id });
+    const variant = p.variants[0];
+    if (canAddDirect(p) && variant) {
+      setAdded(p.id); addLine(storeLine(p, variant)); setTimeout(() => setAdded(null), 1300);
+    } else setStoreQuick({ p, el });
+  };
   const heroRef = useRef<HTMLDivElement>(null);
-  const bestRef = useRef<HTMLDivElement>(null);
-  const finderRef = useRef<HTMLDivElement>(null);
+  const bestRef = useRef<HTMLElement>(null);
+  const finderRef = useRef<HTMLElement>(null);
   const [pastHero, setPastHero] = useState(false);
   useEffect(() => {
-    const onScroll = () => setPastHero((heroRef.current?.getBoundingClientRect().bottom ?? 1) < 0);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
+    const scroll = () => setPastHero((heroRef.current?.getBoundingClientRect().bottom ?? 1) < 0);
+    scroll(); window.addEventListener("scroll", scroll, { passive: true });
+    return () => window.removeEventListener("scroll", scroll);
   }, []);
-
-  const toBest = () => bestRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  const toFinder = () => finderRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-
-  return (
-    <>
-      <div ref={heroRef}>
-        <HomeHero onShop={toBest} onFind={toFinder} />
-      </div>
-
-      <main className="mx-auto max-w-[1320px] px-4 md:px-6">
-        {/* 2. Best sellers — the money row, right under the hero */}
-        <section ref={bestRef} className="scroll-mt-4 pt-10 md:pt-14" aria-labelledby="bs">
-          <div className="flex items-baseline justify-between gap-4">
-            <h2 id="bs" className={h2}>Best sellers</h2>
-            <a href="/masters" className="min-h-11 text-sm font-medium text-primary underline-offset-4 hover:underline">Shop all →</a>
-          </div>
-          <div className="mt-6 grid grid-cols-2 gap-3 md:gap-6 lg:grid-cols-4">
-            <ProductCard
-              product={BEST_SELLER_PRODUCT}
-              eager
-              onQuickAdd={(p, el) => {
-                track("bestseller_quick_add", { product: p.id });
-                openQuick(p, el);
-              }}
-            />
-            {BEST_SELLER_EXTERNAL.map((item) => (
-              <ExternalCard key={item.name} item={item} eager />
-            ))}
-          </div>
-        </section>
-      </main>
-
-      {/* 3. Offer ladder */}
-      <div className="mt-14 md:mt-20">
-        <OfferLadder />
-      </div>
-
-      <main className="mx-auto max-w-[1320px] px-4 md:px-6">
-        {/* 4. Lure finder */}
-        <section ref={finderRef} className="mt-14 scroll-mt-4 md:mt-24" aria-labelledby="lf">
-          <h2 id="lf" className={h2}>Not sure which lure? Answer 3 questions.</h2>
-          <div className="mt-6">
-            <LureFinder onQuickAdd={openQuick} />
-          </div>
-        </section>
-
-        {/* 5. Shoppable catches */}
-        <section className="mt-14 md:mt-24" aria-labelledby="cg">
-          <h2 id="cg" className={h2}>Caught on FAR</h2>
-          <CatchGrid />
-        </section>
-
-        {/* 6. Reviews */}
-        <section className="mt-14 md:mt-24" aria-labelledby="rv">
-          <h2 id="rv" className="sr-only">Reviews</h2>
-          <Reviews onQuickAdd={openQuick} />
-        </section>
-
-        {/* 7. Why FAR */}
-        <section className="mt-14 md:mt-24">
-          <WhyFar />
-        </section>
-
-        {/* 8. Founder */}
-        <section className="mt-14 md:mt-24" aria-label="About the founder">
-          <Founder />
-        </section>
-
-        {/* 9. Category tiles */}
-        <section className="mt-14 md:mt-24" aria-labelledby="ct">
-          <h2 id="ct" className={h2}>Shop by category</h2>
-          <CategoryTiles />
-        </section>
-
-        {/* 10. FAQ */}
-        <section className="mt-14 grid gap-6 md:mt-24 md:grid-cols-[1fr_1.6fr] md:gap-16" aria-labelledby="faq">
-          <div>
-            <h2 id="faq" className={h2}>The last questions</h2>
-            <p className="mt-3 text-muted-foreground">Shipping, returns, rigging and where our lures are made.</p>
-          </div>
-          <HomeFaq />
-        </section>
-      </main>
-
-      {/* 11. Email capture */}
+  const scrollTo = (el: HTMLElement | null) => el?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+  const toBest = () => scrollTo(bestRef.current);
+  const toFinder = () => scrollTo(finderRef.current);
+  const row = (key: "best" | "ghost" | "bundles" | "apparel", title: string, href: string, subhead?: string) => <Carousel label={title} title={title} href={href} subhead={subhead} linkLabel={`Shop all ${key === "best" ? "" : key === "ghost" ? "Ghost Drops " : key + " "}→`}>
+    {STORE_ROWS[key].map((p, i) => <StoreProductCard key={p.id} product={p} eager={key === "best" && i < 4} added={added === p.id} onQuickAdd={openStoreQuick} />)}
+  </Carousel>;
+  return <>
+    <StoreHeader qty={cartQty} onCart={() => setCartOpen(true)} onFind={toFinder} onBest={toBest} onOverlayChange={setOverlayOpen} onQuickAdd={openStoreQuick} />
+    <div ref={heroRef}><HomeHero onShop={toBest} onFind={toFinder} /></div>
+    <main>
+      <section ref={bestRef} id="best-sellers" className="page-width home-section first-section">{row("best", "Best sellers", "https://filletandreleaseco.com/collections/best-sellers-1")}</section>
+      <div className="home-section"><OfferLadder /></div>
+      <section className="page-width home-section">{row("ghost", "Ghost Drops", "https://filletandreleaseco.com/collections/ghost-drops-signature-stickbaits", "60–135mm timber stickbaits for estuary and light work.")}</section>
+      <section ref={finderRef} id="finder" className="home-section surface-section"><div className="page-width"><h2 className="section-title">Not sure which lure? Answer 3 questions.</h2><div className="mt-6"><LureFinder onQuickAdd={openQuick} /></div></div></section>
+      <section className="page-width home-section"><HomeCatches onQuickAdd={openQuick} /></section>
+      <section className="home-section surface-section" aria-label="Customer reviews"><div className="page-width"><HomeReviews onQuickAdd={openQuick} /></div></section>
+      <section className="page-width home-section">{row("bundles", "Bundles — save up to 30%", "https://filletandreleaseco.com/collections/all-bundles")}</section>
+      <section className="page-width home-section"><WhyFar /></section>
+      <section className="home-section surface-section"><div className="page-width">{row("apparel", "Apparel", "https://filletandreleaseco.com/collections/jerseys", "Fishing jerseys, long sleeves, beanies and caps.")}</div></section>
+      <section className="page-width home-section" aria-label="About the founder"><Founder /></section>
+      <section className="page-width home-section"><h2 className="section-title">Shop by category</h2><CategoryTiles /></section>
+      <section id="faq" className="page-width home-section grid gap-6 md:grid-cols-[1fr_1.6fr] md:gap-16"><div><h2 className="section-title">The last questions</h2><p className="mt-3 text-muted-foreground">Shipping, returns, rigging and where our lures are made.</p></div><HomeFaq /></section>
       <EmailBand />
-
-      <StickyCta visible={pastHero && !cartOpen && !quick} onFind={toFinder} onShop={toBest} />
-      <QuickAdd product={quick?.p ?? null} trigger={quick?.el ?? null} cartQty={cartQty} onClose={() => setQuick(null)} onAdd={addLine} />
-      <CartDrawer open={cartOpen} onOpenChange={setCartOpen} lines={lines} onRemove={(k) => setLines((p) => p.filter((l) => l.key !== k))} />
-    </>
-  );
+    </main>
+    <StoreFooter />
+    <StickyCta visible={pastHero && !cartOpen && !quick && !storeQuick && !overlayOpen} onFind={toFinder} onShop={toBest} />
+    <QuickAdd product={quick?.p ?? null} trigger={quick?.el ?? null} cartQty={cartQty} onClose={() => setQuick(null)} onAdd={addLine} />
+    <StoreQuickAdd product={storeQuick?.p ?? null} trigger={storeQuick?.el ?? null} onClose={() => setStoreQuick(null)} onAdd={addLine} />
+    <CartDrawer open={cartOpen} onOpenChange={setCartOpen} lines={lines} onRemove={(key) => setLines((prev) => prev.filter((line) => line.key !== key))} onQuantityChange={(key, qty) => setLines((prev) => qty <= 0 ? prev.filter((line) => line.key !== key) : prev.map((line) => line.key === key ? { ...line, qty } : line))} onUpsell={(p, el) => { setCartOpen(false); openStoreQuick(p, el); }} />
+  </>;
 }
