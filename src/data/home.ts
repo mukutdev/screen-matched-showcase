@@ -70,6 +70,7 @@ export interface Review {
   quote: string;
   name: string;
   productId: string;
+  sample?: boolean;
 }
 
 /** Real reviews from the store — add more as they're approved. */
@@ -79,6 +80,27 @@ export const REVIEWS: Review[] = [
     quote: "Had an absolute session on the Silver Herring. Rig however you like and they still swim amazing.",
     name: "Jack F.",
     productId: "masters-150f",
+  },
+  {
+    stars: 5,
+    quote: "A compact timber stickbait for the lighter outfit. The 105F would be my pick for working the edges on an estuary morning.",
+    name: "Sample review",
+    productId: "masters-105f",
+    sample: true,
+  },
+  {
+    stars: 5,
+    quote: "For an inshore session, I'd reach for the 125F. A handy middle size when I want to keep the presentation compact without going too light.",
+    name: "Sample review",
+    productId: "masters-125f",
+    sample: true,
+  },
+  {
+    stars: 5,
+    quote: "The 170S would be my choice for a reef outfit when I want a sinking presentation. A larger timber lure to round out the tackle tray.",
+    name: "Sample review",
+    productId: "masters-170s",
+    sample: true,
   },
 ];
 
