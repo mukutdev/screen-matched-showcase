@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown, CreditCard, Facebook, Instagram, Menu, Search, ShoppingBag, User, X } from "lucide-react";
+import { ChevronDown, Facebook, Instagram, Menu, Search, ShoppingBag, User, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTitle, SheetDescription } from "@/components/ui/sheet";
@@ -10,6 +10,21 @@ import { STORE } from "@/data/collection";
 import { ALL_STORE_PRODUCTS, type StoreProduct } from "@/lib/store";
 import { money } from "@/lib/cart";
 import logoAsset from "@/assets/far-lockup.png.asset.json";
+import payVisa from "@/assets/pay/visa.png.asset.json";
+import payMastercard from "@/assets/pay/mastercard.png.asset.json";
+import payPaypal from "@/assets/pay/paypal.png.asset.json";
+import payApplepay from "@/assets/pay/applepay.png.asset.json";
+import payAmex from "@/assets/pay/amex.png.asset.json";
+import payGpay from "@/assets/pay/gpay.png.asset.json";
+
+const PAYMENT_ICONS = [
+  { name: "Visa", src: payVisa.url },
+  { name: "Mastercard", src: payMastercard.url },
+  { name: "PayPal", src: payPaypal.url },
+  { name: "Apple Pay", src: payApplepay.url },
+  { name: "American Express", src: payAmex.url },
+  { name: "Google Pay", src: payGpay.url },
+];
 
 const SHOP_ALL = STORE + "/collections/shop-all";
 const BEST = STORE + "/collections/best-sellers-1";
@@ -95,7 +110,7 @@ export function StoreFooter() {
   return <footer className="store-footer"><div className="tight-lines" aria-label="Tight lines">TIGHT LINES.</div><div className="page-width pb-10">
     <div className="hidden grid-cols-4 gap-10 md:grid">{FOOTER_GROUPS.map((group) => <div key={group.title}><h3 className="mb-5 font-semibold">{group.title}</h3><FooterLinks group={group} /></div>)}<BrandColumn /></div>
     <div className="md:hidden"><Accordion type="multiple">{FOOTER_GROUPS.map((group) => <AccordionItem key={group.title} value={group.title}><AccordionTrigger>{group.title}</AccordionTrigger><AccordionContent><FooterLinks group={group} /></AccordionContent></AccordionItem>)}</Accordion><div className="mt-8"><BrandColumn /></div></div>
-    <div className="mt-12 flex flex-wrap items-center justify-between gap-5 border-t border-border pt-6 text-[13px] text-muted-foreground"><div className="flex flex-wrap gap-x-5 gap-y-3"><span>© {new Date().getUTCFullYear()} Fillet &amp; Release Co.</span>{[["Privacy Policy", "privacy-policy"], ["Terms of Service", "terms-of-service"], ["Shipping Policy", "shipping-policy"], ["Refund Policy", "refund-policy"]].map(([label, path]) => <a key={path} href={STORE + "/policies/" + path}>{label}</a>)}</div><div className="flex items-center gap-3" aria-label="Secure checkout"><CreditCard className="h-5 w-5" /><span>Visa · Mastercard · PayPal · Apple Pay</span></div></div>
+    <div className="mt-12 flex flex-wrap items-center justify-between gap-5 border-t border-border pt-6 text-[13px] text-muted-foreground"><div className="flex flex-wrap gap-x-5 gap-y-3"><span>© {new Date().getUTCFullYear()} Fillet &amp; Release Co.</span>{[["Privacy Policy", "privacy-policy"], ["Terms of Service", "terms-of-service"], ["Shipping Policy", "shipping-policy"], ["Refund Policy", "refund-policy"]].map(([label, path]) => <a key={path} href={STORE + "/policies/" + path}>{label}</a>)}</div><div className="flex items-center gap-2" aria-label="Secure checkout">{PAYMENT_ICONS.map((icon) => <span key={icon.name} className="flex h-7 items-center justify-center rounded-md bg-white px-2"><img src={icon.src} alt={icon.name} title={icon.name} className="h-3.5 w-auto" loading="lazy" /></span>)}</div></div>
   </div></footer>;
 }
 function BrandColumn() { return <div><Logo /><p className="mt-4 text-sm text-muted-foreground">Premium handcrafted timber lures. Designed by an ex-military founder. Tested on Australian water.</p><a href="mailto:filletandrelease@outlook.com.au" className="mt-4 block break-all text-sm">filletandrelease@outlook.com.au</a><div className="mt-3"><Social /></div></div>; }
