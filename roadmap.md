@@ -1,5 +1,5 @@
 # Tasks
-- [ ] Optimize and verify phone, tablet and desktop layouts without changing merchandising.
+- [x] Optimize and verify phone, tablet and desktop layouts without changing merchandising.
 - [x] Move the Masters collection page from `/` to `/masters`.
 - [x] Build the v3 home page at `/` (hero, best sellers, offer ladder, lure finder, catches, reviews, why FAR, founder, categories, FAQ, email band, sticky mobile CTA).
 - [x] Add the $175 free-jig-pack threshold to the cart drawer progress.
