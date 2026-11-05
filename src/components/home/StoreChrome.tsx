@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { ChevronDown, CreditCard, Facebook, Instagram, Menu, Search, ShoppingBag, User, X } from "lucide-react";
+import { ChevronDown, Facebook, Instagram, Menu, Search, ShoppingBag, User, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTitle, SheetDescription } from "@/components/ui/sheet";
@@ -10,6 +10,21 @@ import { STORE } from "@/data/collection";
 import { ALL_STORE_PRODUCTS, type StoreProduct } from "@/lib/store";
 import { money } from "@/lib/cart";
 import logoAsset from "@/assets/far-lockup.png.asset.json";
+import payVisa from "@/assets/pay/visa.png.asset.json";
+import payMastercard from "@/assets/pay/mastercard.png.asset.json";
+import payPaypal from "@/assets/pay/paypal.png.asset.json";
+import payApplepay from "@/assets/pay/applepay.png.asset.json";
+import payAmex from "@/assets/pay/amex.png.asset.json";
+import payGpay from "@/assets/pay/gpay.png.asset.json";
+
+const PAYMENT_ICONS = [
+  { name: "Visa", src: payVisa.url },
+  { name: "Mastercard", src: payMastercard.url },
+  { name: "PayPal", src: payPaypal.url },
+  { name: "Apple Pay", src: payApplepay.url },
+  { name: "American Express", src: payAmex.url },
+  { name: "Google Pay", src: payGpay.url },
+];
 
 const SHOP_ALL = STORE + "/collections/shop-all";
 const BEST = STORE + "/collections/best-sellers-1";
