@@ -15,5 +15,6 @@
 - Analytics events go through src/lib/track.ts (window.dataLayer push) — add new events there, never ad-hoc gtag calls.
 - Use Embla for the centered catch carousel, with active-slide state pausing inactive videos — keeps touch navigation reliable and prevents simultaneous playback.
 - Home product, photo and review rows use Carousel's native scroll-snap track; keep the Masters video coverflow separate because its playback and focus behavior differ.
+- Responsive home layouts use shrinkable grid tracks and a content-sized hero with reserved header space so carousels cannot widen the page or clip the headline.
 - Store merchandise snapshots and collection data are browser-safe static data; never invent stock, reviews or catch-to-product associations when public data is unavailable.
 - Cart lines identify variants and explicitly mark non-Masters merchandise as ineligible for the Masters mix-and-match discount to avoid discounting apparel and pre-bundled products.
