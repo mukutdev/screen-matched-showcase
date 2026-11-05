@@ -30,7 +30,7 @@ export function Carousel({ label, title, subhead, href, linkLabel = "Shop all â†
   };
   return <div className={`product-carousel carousel-${kind}`} role="region" aria-label={label}>
     <div className="carousel-heading">
-      <div>{title && <h2 className="section-title">{title}</h2>}{subhead && <p className="mt-2 text-[15px] text-muted-foreground">{subhead}</p>}</div>
+      <div className="min-w-0">{title && <h2 className="section-title">{title}</h2>}{subhead && <p className="mt-2 text-[15px] text-muted-foreground">{subhead}</p>}</div>
       <div className="flex shrink-0 items-center gap-2">
         {href && <Button asChild variant="link" className="h-11 px-0 text-[13px] md:text-sm"><a href={href}>{linkLabel}</a></Button>}
         {!state.fits && <div className="hidden gap-2 md:flex">

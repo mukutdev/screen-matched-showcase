@@ -65,7 +65,7 @@ export function HomeHero({ onShop, onFind }: { onShop: () => void; onFind: () =>
   };
 
   return (
-    <section className="relative flex h-[62vh] max-h-[560px] min-h-[390px] flex-col justify-end overflow-hidden md:h-[70vh] md:max-h-[720px] md:min-h-[540px]">
+    <section className="home-hero relative flex flex-col justify-end overflow-hidden">
       <img src={HOME_HERO.poster} alt="" className="absolute inset-0 h-full w-full object-cover" fetchPriority="high" />
       {showVideo && (
         <video
@@ -85,7 +85,7 @@ export function HomeHero({ onShop, onFind }: { onShop: () => void; onFind: () =>
       )}
       <div className="absolute inset-0" style={{ background: "var(--hero-overlay)" }} />
 
-      <div className="relative mx-auto w-full max-w-[1320px] px-4 pb-8 md:px-6 md:pb-12">
+      <div className="home-hero-content relative mx-auto w-full max-w-[1320px] px-4 md:px-6">
         <div className="max-w-[640px]">
           <p className="eyebrow text-primary">Fuel the passion</p>
           <h1 className="mt-2 text-[34px] font-bold leading-[1.05] tracking-normal md:text-[56px]">
@@ -94,14 +94,14 @@ export function HomeHero({ onShop, onFind }: { onShop: () => void; onFind: () =>
           <p className="mt-3 text-base text-foreground/85">
             Hand-shaped, hand-painted, stainless through-wire. Veteran-owned and tested on Australian water.
           </p>
-          <div className="mt-5 flex flex-wrap gap-3">
+          <div className="hero-actions mt-5 grid gap-3 sm:flex sm:flex-wrap">
             <Button
               type="button"
               onClick={() => {
                 track("hero_cta_click", { cta: "shop_best_sellers" });
                 onShop();
               }}
-              className="min-h-12 rounded-full bg-primary px-6 font-medium text-primary-foreground transition-colors duration-150 hover:bg-primary/90"
+              className="h-12 rounded-full bg-primary px-4 font-medium text-primary-foreground transition-colors duration-150 hover:bg-primary/90 md:px-6"
             >
               Shop best sellers
             </Button>
@@ -451,8 +451,8 @@ export function WhyFar() {
             </div>
           ))}
         </dl>
-        <p className="mt-5 flex items-center gap-2 text-sm font-medium">
-          <ShieldCheck className="h-5 w-5 text-success" /> Fish it for 30 days. Not happy? Money back.
+        <p className="mt-5 flex items-start gap-2 text-sm font-medium">
+          <ShieldCheck className="h-5 w-5 shrink-0 text-success" /> Fish it for 30 days. Not happy? Money back.
         </p>
         <Link to="/masters" className="mt-6 inline-flex min-h-12 items-center rounded-full bg-primary px-6 font-medium text-primary-foreground hover:bg-primary/90">
           Shop stickbaits
@@ -466,13 +466,13 @@ export function WhyFar() {
 
 export function Founder() {
   return (
-    <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center">
+    <div className="grid items-start gap-6 sm:grid-cols-[128px_minmax(0,1fr)] sm:items-center xl:grid-cols-[128px_minmax(0,1fr)_auto]">
       <img src={founderAsset.url} alt="Jaison Greer, FAR founder" loading="lazy" className="h-40 w-32 shrink-0 rounded-lg object-cover" />
-      <div className="flex-1">
+      <div className="min-w-0">
         <p className="eyebrow text-primary">Veteran owned &amp; operated</p>
         <p className="mt-2 max-w-2xl text-foreground/85">{FOUNDER.text}</p><p className="mt-3 font-medium text-primary">Give back to Aussie veterans. Protect our waterways.</p>
       </div>
-      <a href={FOUNDER.href} className="inline-flex min-h-11 shrink-0 items-center gap-1 text-sm font-medium text-primary underline-offset-4 hover:underline">
+      <a href={FOUNDER.href} className="inline-flex min-h-11 shrink-0 items-center gap-1 text-sm font-medium text-primary underline-offset-4 hover:underline sm:col-start-2 xl:col-start-3">
         Read our story <ArrowUpRight className="h-4 w-4" />
       </a>
     </div>
@@ -483,7 +483,7 @@ export function Founder() {
 
 export function CategoryTiles() {
   return (
-    <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-5 md:gap-6">
+    <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-5 md:gap-6">
       {CATEGORIES.map((c) => {
         const inner = (
           <>
@@ -611,7 +611,7 @@ export function StickyCta({ visible, onFind, onShop }: { visible: boolean; onFin
       className={`fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/90 backdrop-blur transition-transform duration-200 md:hidden ${visible ? "translate-y-0" : "translate-y-full"}`}
       aria-hidden={!visible}
     >
-      <div className="flex gap-2 p-3">
+      <div className="sticky-cta-inner grid grid-cols-2 gap-2 p-3">
         <Button
           variant="outline"
           type="button"
