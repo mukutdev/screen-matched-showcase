@@ -17,6 +17,7 @@ const TITLE = "Handcrafted Timber Fishing Lures | Fillet & Release Co. (FAR)";
 const DESC = "Shop handcrafted timber stickbaits, Ghost Drops, jigging bundles and fishing apparel. Veteran owned and tested on Australian water.";
 export const Route = createFileRoute("/")({ head: () => ({ meta: [
   { title: TITLE }, { name: "description", content: DESC }, { property: "og:title", content: TITLE }, { property: "og:description", content: DESC }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary_large_image" },
+  { property: "og:image", content: HOME_HERO.poster }, { name: "twitter:image", content: HOME_HERO.poster },
 ] }), component: HomePage });
 
 function HomePage() {
