@@ -9,7 +9,7 @@ import { CATEGORIES, INSTAGRAM } from "@/data/home";
 import { STORE } from "@/data/collection";
 import { ALL_STORE_PRODUCTS, type StoreProduct } from "@/lib/store";
 import { money } from "@/lib/cart";
-import logoAsset from "@/assets/far-lockup.png.asset.json";
+import logoAsset from "@/assets/far-lettering.png.asset.json";
 import payVisa from "@/assets/pay/visa.png.asset.json";
 import payMastercard from "@/assets/pay/mastercard.png.asset.json";
 import payPaypal from "@/assets/pay/paypal.png.asset.json";
@@ -30,7 +30,7 @@ const SHOP_ALL = STORE + "/collections/shop-all";
 const BEST = STORE + "/collections/best-sellers-1";
 const FACEBOOK = "https://www.facebook.com/filletandreleaseco";
 const NAV = [{ label: "Our Story", href: STORE + "/pages/about-us" }, { label: "Rigging Guide", href: STORE + "/pages/rigging-guide-new" }, { label: "Contact", href: STORE + "/pages/contact-us" }];
-const Logo = () => <a href="/" aria-label="Fillet & Release Co. home"><img src={logoAsset.url} alt="FAR × Fillet & Release" width={180} height={50} className="brand-logo" /></a>;
+const Logo = () => <a href="/" aria-label="Fillet & Release Co. home"><img src={logoAsset.url} alt="FAR — Fillet & Release Co." width={150} height={43} className="brand-logo" /></a>;
 const Social = () => <div className="flex gap-2"><Button asChild size="icon" variant="ghost" aria-label="Instagram"><a href={INSTAGRAM}><Instagram /></a></Button><Button asChild size="icon" variant="ghost" aria-label="Facebook"><a href={FACEBOOK}><Facebook /></a></Button></div>;
 
 export function StoreHeader({ qty, onCart, onFind, onBest, onOverlayChange, onQuickAdd }: { qty: number; onCart: () => void; onFind: () => void; onBest: () => void; onOverlayChange: (open: boolean) => void; onQuickAdd: (p: StoreProduct, el: HTMLElement) => void }) {
