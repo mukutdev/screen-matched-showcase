@@ -228,7 +228,7 @@
   .carousel-reviews .carousel-track > * { flex-basis: calc((100% - 1.6px) / 1.1); }
   .carousel-heading { flex-wrap: wrap; gap: 6px; margin-bottom: 20px; }
   .header-inner { padding-inline: 10px; gap: 0; }
-  .brand-logo { width: 132px; height: 44px; }
+  .brand-logo { width: 120px; height: auto; }
   .header-inner > a { position: absolute; left: 50%; transform: translateX(-50%); }
   .tight-lines { font-size: 42px; padding: 32px 16px; }
   .offer-step + .offer-step::before { display: none; }
