@@ -74,7 +74,9 @@ function ProductPage() {
 
   const select = (colour: ColourName, requestedSize: SizeName) => {
     const size = nearestAvailableSize(colour, requestedSize);
-    void navigate({ to: "/product", search: { colour, size }, replace: true });
+    setSelectedColour(colour);
+    setSelectedSize(size);
+    window.history.replaceState(null, "", `/product?colour=${encodeURIComponent(colour)}&size=${encodeURIComponent(size)}`);
     setQty(1);
   };
   const selectColour = (colour: ColourName) => select(colour, selectedSize);
