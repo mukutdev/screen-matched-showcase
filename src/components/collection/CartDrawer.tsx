@@ -38,7 +38,7 @@ export function CartDrawer({
   const pct = Math.min(100, Math.max(0, milestone.pct));
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="flex w-full flex-col bg-background sm:max-w-md">
+      <SheetContent side="right" className={`flex w-full flex-col bg-background sm:max-w-md ${checkout ? "" : "product-cart"}`}>
         <SheetTitle className="text-xl font-bold">Your cart ({t.qty})</SheetTitle>
         <SheetDescription className="sr-only">Cart contents and totals</SheetDescription>
         <div>
