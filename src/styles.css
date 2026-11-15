@@ -335,7 +335,7 @@
 .product-trust li { display: flex; min-height: 70px; align-items: center; gap: 8px; padding: 12px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); font-size: 13px; line-height: 1.35; }
 .product-trust svg { width: 15px; flex: 0 0 auto; }
 .product-rigging { margin-top: 22px; }
-.product-rigging [data-slot="accordion-trigger"] { min-height: 56px; font-size: 15px; hover:no-underline; }
+.product-rigging [data-slot="accordion-trigger"] { min-height: 56px; font-size: 15px; }
 .product-rigging dl { display: grid; gap: 12px; }
 .product-rigging dl > div { display: flex; justify-content: space-between; gap: 20px; }
 .product-rigging dt { color: var(--muted-foreground); }

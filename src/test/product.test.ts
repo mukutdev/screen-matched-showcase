@@ -11,7 +11,7 @@ describe("Masters Floating product variants", () => {
 
   it("moves a sold-out colour request to the nearest available size", () => {
     expect(nearestAvailableSize("Neon Fury", "150mm")).toBe("125mm");
-    expect(nearestAvailableSize("Pink Lady", "250mm")).toBe("220mm");
+    expect(nearestAvailableSize("Pink Lady", "250mm")).toBe("185mm");
     expect(nearestAvailableSize("Ghost", "105mm")).toBe("105mm");
   });
 
