@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
-import { Check, ChevronDown, Minus, Plus, ShieldCheck, ShoppingBag } from "lucide-react";
+import { Check, Minus, Plus, ShieldCheck, ShoppingBag } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { ResponsiveModal } from "@/components/collection/QuickAdd";
@@ -184,7 +184,7 @@ function ProductPage() {
           <ul className="product-trust">{shop.trust.map((item) => <li key={item}><Check aria-hidden="true" />{item}</li>)}</ul>
 
           <Accordion type="single" collapsible defaultValue={mobile ? undefined : "rigging"} className="product-rigging">
-            <AccordionItem value="rigging"><AccordionTrigger>{b.riggingTitle}<ChevronDown aria-hidden="true" /></AccordionTrigger><AccordionContent>
+            <AccordionItem value="rigging"><AccordionTrigger>{b.riggingTitle}</AccordionTrigger><AccordionContent>
               <dl><div><dt>{b.splitRings}</dt><dd>{size.rings ?? b.contact}</dd></div><div><dt>{b.hooks}</dt><dd>{size.hooks ?? b.contact}</dd></div></dl>
             </AccordionContent></AccordionItem>
           </Accordion>
