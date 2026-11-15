@@ -19,7 +19,7 @@ const TITLE = "Masters Floating Timber Stickbait | Fillet & Release Co.";
 const DESC = "Choose from seven floating Masters stickbait sizes and six colourways. Hand-shaped Korean Pine, through-wire construction and free shipping over $129.";
 
 export const Route = createFileRoute("/product")({
-  validateSearch: (search: Record<string, unknown>) => validSelection(search.colour, search.size),
+  validateSearch: (search: Record<string, unknown>) => validSelection(search["colour"], search["size"]),
   head: () => ({ meta: [
     { title: TITLE },
     { name: "description", content: DESC },
@@ -125,7 +125,7 @@ function ProductPage() {
                 const available = isAvailable(selectedColour, item.size);
                 return <button type="button" key={item.size} disabled={!available} onClick={() => selectSize(item.size)} className={selected ? "is-selected" : ""} aria-pressed={selected} aria-label={`${item.size} · ${item.weight}${available ? "" : ` · ${b.soldOut}`}`}>
                   <span className="product-scale-size">{item.size}</span>
-                  <span className="product-scale-track"><span style={{ width: `${(item.mm / sizes[sizes.length - 1].mm) * 100}%` }} /></span>
+                  <span className="product-scale-track"><span style={{ width: `${(item.mm / sizes.at(-1)!.mm) * 100}%` }} /></span>
                   <span className="product-scale-weight">{selected ? item.weight : available ? "" : b.soldOut}</span>
                 </button>;
               })}
@@ -183,7 +183,7 @@ function ProductPage() {
           <a className="product-guarantee" href={STORE + shop.guaranteeHref}><ShieldCheck aria-hidden="true" />{shop.guarantee}</a>
           <ul className="product-trust">{shop.trust.map((item) => <li key={item}><Check aria-hidden="true" />{item}</li>)}</ul>
 
-          <Accordion type="single" collapsible defaultValue={mobile ? undefined : "rigging"} className="product-rigging">
+          <Accordion type="single" collapsible defaultValue={mobile ? "" : "rigging"} className="product-rigging">
             <AccordionItem value="rigging"><AccordionTrigger>{b.riggingTitle}</AccordionTrigger><AccordionContent>
               <dl><div><dt>{b.splitRings}</dt><dd>{size.rings ?? b.contact}</dd></div><div><dt>{b.hooks}</dt><dd>{size.hooks ?? b.contact}</dd></div></dl>
             </AccordionContent></AccordionItem>

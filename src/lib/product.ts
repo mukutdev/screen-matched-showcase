@@ -51,7 +51,7 @@ export function moneyFromCents(cents: number) {
 }
 
 export function validColour(value: unknown): ColourName {
-  return colours.includes(value as ColourName) ? (value as ColourName) : colours[0];
+  return colours.includes(value as ColourName) ? (value as ColourName) : colours[0]!;
 }
 
 export function validSize(value: unknown): SizeName {
