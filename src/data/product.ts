@@ -88,8 +88,6 @@ export const variants = product.options[0].values.flatMap((colour) =>
       price: size.price,
       available: !soldOut.some(([soldColour, soldSize]) => soldColour === colour && soldSize === size.size),
       featured_image: product.colourImages[colour as ColourName],
-      option1,
-      option2,
     };
   }),
 );
