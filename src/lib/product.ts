@@ -55,7 +55,7 @@ export function validColour(value: unknown): ColourName {
 }
 
 export function validSize(value: unknown): SizeName {
-  return sizeNames.includes(value as SizeName) ? (value as SizeName) : sizeNames[0];
+  return sizeNames.includes(value as SizeName) ? (value as SizeName) : sizeNames[0]!;
 }
 
 export function validSelection(colourValue: unknown, sizeValue: unknown) {
