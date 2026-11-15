@@ -10,8 +10,8 @@
 <!-- LOVABLE:END -->
 
 ## Architecture
-- All collection/product data lives in src/data/collection.ts; filter and cart rules are pure functions in src/lib — keeps the prototype portable to Shopify Liquid and testable.
-- `/` is the conversion-first home page; the Masters collection lives at `/masters`. Home store merchandise uses normalized live-catalog snapshots and StoreQuickAdd; finder Masters use the existing QuickAdd, with one shared CartDrawer.
+- Collection data lives in src/data/collection.ts; the Masters Floating product detail has its Shopify-shaped model in src/data/product.ts; filter, variant and cart rules are pure functions in src/lib — keeps the prototype portable to Shopify Liquid and testable.
+- `/` is the conversion-first home page, `/masters` is the collection and `/product` is the Masters Floating detail page. Home store merchandise uses normalized live-catalog snapshots and StoreQuickAdd; finder Masters use the existing QuickAdd, with one shared CartDrawer.
 - Analytics events go through src/lib/track.ts (window.dataLayer push) — add new events there, never ad-hoc gtag calls.
 - Use Embla for the centered catch carousel, with active-slide state pausing inactive videos — keeps touch navigation reliable and prevents simultaneous playback.
 - Home product, photo and review rows use Carousel's native scroll-snap track; keep the Masters video coverflow separate because its playback and focus behavior differ.

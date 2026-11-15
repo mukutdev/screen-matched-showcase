@@ -105,7 +105,7 @@ export function ActionSection({ onFloating }: { onFloating: () => void }) {
       <SectionHeading title={c.actionTitle} description={c.actionDescription} />
       <div className="product-action-grid">
         {productContent.actionChoices.map((choice) => <article className="product-action-card" key={choice.title}>
-          <div className="product-action-image"><img src={choice.image} alt={`${choice.title} Masters stickbait`} loading="lazy" /></div>
+          <div className="product-action-image"><img src={choice.image} alt={choice.imageAlt} loading="lazy" /></div>
           <div className="product-action-copy"><p className="eyebrow">{choice.range} · {c.from} {moneyFromCents(choice.fromPrice)}</p><h3>{choice.title}</h3><p>{choice.description}</p>
             {choice.current ? <button type="button" className="product-outline-button" onClick={onFloating}>{choice.cta}</button> : <a className="product-outline-button" href={choice.href}>{choice.cta}</a>}
           </div>

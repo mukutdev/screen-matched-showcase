@@ -188,8 +188,8 @@ export const productContent = {
     { kind: "video", label: "Catch video two" },
   ],
   actionChoices: [
-    { title: "Floating", range: "105–250mm", fromPrice: 3999, description: "Sits in the strike zone on the pause. Work the surface and let the timber rise when you stop.", image: product.colourImages["Tropic Holo"], cta: "Shop floating", current: true, href: product.url },
-    { title: "Sinking", range: "105–185mm", fromPrice: 3999, description: "Works beneath the surface with an erratic action that imitates a fleeing baitfish.", image: product.colourImages["Blue Pilchard"], cta: "Explore sinking", current: false, href: "https://filletandreleaseco.com/products/floating-stickbaits" },
+    { title: "Floating", range: "105–250mm", fromPrice: 3999, description: "Sits in the strike zone on the pause. Work the surface and let the timber rise when you stop.", image: product.colourImages["Tropic Holo"], imageAlt: "Floating Masters timber stickbait", cta: "Shop floating", current: true, href: product.url },
+    { title: "Sinking", range: "105–185mm", fromPrice: 3999, description: "Works beneath the surface with an erratic action that imitates a fleeing baitfish.", image: product.colourImages["Blue Pilchard"], imageAlt: "Sinking Masters timber stickbait", cta: "Explore sinking", current: false, href: "https://filletandreleaseco.com/products/floating-stickbaits" },
   ],
   reviews: [
     { name: "Raymond Renton", text: "Extremely happy with my first ever order. Great quality and they cast a mile! Swim action is insane", verified: true, placeholder: false },
