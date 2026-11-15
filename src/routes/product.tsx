@@ -44,8 +44,10 @@ function optionKeys(event: KeyboardEvent<HTMLButtonElement>) {
 }
 
 function ProductPage() {
-  const { colour: selectedColour, size: selectedSize } = Route.useSearch();
+  const initialSelection = Route.useSearch();
   const navigate = useNavigate();
+  const [selectedColour, setSelectedColour] = useState<ColourName>(initialSelection.colour);
+  const [selectedSize, setSelectedSize] = useState<SizeName>(initialSelection.size);
   const mobile = useIsMobile();
   const [qty, setQty] = useState(1);
   const [lines, setLines] = useState<CartLine[]>([]);
