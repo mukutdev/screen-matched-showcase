@@ -77,8 +77,8 @@ const colourIds: Record<ColourName, ColourId> = {
 
 export const colourId = (colour: ColourName): ColourId => colourIds[colour];
 
-export const variants = product.options[0].values.flatMap((colour, option1) =>
-  sizes.map((size, option2) => {
+export const variants = product.options[0].values.flatMap((colour) =>
+  sizes.map((size) => {
     const collectionProduct = PRODUCTS.find((item) => item.id === `masters-${size.mm}f`)!;
     return {
       id: shopifyVariantId(collectionProduct, colourId(colour as ColourName)),
