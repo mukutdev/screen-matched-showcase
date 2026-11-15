@@ -12,6 +12,7 @@ export function CartDrawer({
   onRemove,
   onQuantityChange,
   onUpsell,
+  checkout = true,
 }: {
   open: boolean;
   onOpenChange: (o: boolean) => void;
@@ -19,6 +20,7 @@ export function CartDrawer({
   onRemove: (key: string) => void;
   onQuantityChange?: (key: string, qty: number) => void;
   onUpsell?: (p: StoreProduct, el: HTMLElement) => void;
+  checkout?: boolean;
 }) {
   const t = cartTotals(lines);
   const tier = nextTier(t.eligibleQty);
@@ -81,14 +83,14 @@ export function CartDrawer({
             <span>Subtotal</span>
             <span>{money(t.subtotal)}</span>
           </div>
-          <Button
+          {checkout && <Button
             type="button"
             disabled={!lines.length}
             onClick={() => window.location.assign(cartPermalink(lines))}
             className="mt-2 min-h-12 w-full rounded-full bg-primary font-semibold text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
           >
             Checkout
-          </Button>
+          </Button>}
         </div>
       </SheetContent>
     </Sheet>
