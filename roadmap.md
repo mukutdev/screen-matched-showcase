@@ -1,6 +1,6 @@
 # Tasks
-- [ ] Build the data-driven Masters Floating product page at `/product`, including variant selection, cart, sticky buying controls and all requested content sections.
-- [ ] Add product selection and pricing rule tests; verify desktop and mobile buying flows.
+- [x] Build the data-driven Masters Floating product page at `/product`, including variant selection, cart, sticky buying controls and all requested content sections.
+- [x] Add product selection and pricing rule tests; verify desktop and mobile buying flows.
 - [x] Optimize and verify phone, tablet and desktop layouts without changing merchandising.
 - [x] Move the Masters collection page from `/` to `/masters`.
 - [x] Build the v3 home page at `/` (hero, best sellers, offer ladder, lure finder, catches, reviews, why FAR, founder, categories, FAQ, email band, sticky mobile CTA).
