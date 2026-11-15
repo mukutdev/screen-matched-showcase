@@ -161,6 +161,7 @@ export const productContent = {
     selectSize: "Select {size}",
     actionTitle: "Floating or sinking?",
     actionDescription: "Two actions for different water. The same six colourways and handcrafted timber build.",
+    from: "From",
     reviewsEyebrow: "From the water",
     reviewsTitle: "Verified customer reviews",
     reviewPlaceholder: "Review placeholder",

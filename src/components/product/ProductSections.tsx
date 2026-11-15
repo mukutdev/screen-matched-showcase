@@ -85,7 +85,7 @@ export function SizeChart({ selectedColour, selectedSize, onSelect }: { selected
     <SectionHeading eyebrow={c.chartEyebrow} title={c.chartTitle} />
     <div className="product-chart-scroll">
       <table className="product-chart">
-        <thead><tr><th>{c.chartSize}</th><th>{c.chartWeight}</th><th>{c.chartWater}</th><th>{b.splitRings}</th><th>{b.hooks}</th><th><span className="sr-only">{c.chartAction}</span></th></tr></thead>
+        <thead><tr><th>{c.chartSize}</th><th>{c.chartWeight}</th><th>{c.chartWater}</th><th>{b.splitRings}</th><th>{b.hooks}</th><th aria-label={c.chartAction} /></tr></thead>
         <tbody>{sizes.map((size) => {
           const available = isAvailable(selectedColour, size.size);
           return <tr key={size.size} className={selectedSize === size.size ? "is-selected" : ""}>
@@ -106,7 +106,7 @@ export function ActionSection({ onFloating }: { onFloating: () => void }) {
       <div className="product-action-grid">
         {productContent.actionChoices.map((choice) => <article className="product-action-card" key={choice.title}>
           <div className="product-action-image"><img src={choice.image} alt={`${choice.title} Masters stickbait`} loading="lazy" /></div>
-          <div className="product-action-copy"><p className="eyebrow">{choice.range} · {moneyFromCents(choice.fromPrice)}</p><h3>{choice.title}</h3><p>{choice.description}</p>
+          <div className="product-action-copy"><p className="eyebrow">{choice.range} · {c.from} {moneyFromCents(choice.fromPrice)}</p><h3>{choice.title}</h3><p>{choice.description}</p>
             {choice.current ? <button type="button" className="product-outline-button" onClick={onFloating}>{choice.cta}</button> : <a className="product-outline-button" href={choice.href}>{choice.cta}</a>}
           </div>
         </article>)}
